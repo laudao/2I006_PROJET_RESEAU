@@ -73,6 +73,5 @@ int nbCommodites(Reseau *R);
 /* permet de creer un fichier SVG en html pour visualiser un reseau */
 void afficheReseauSVG(Reseau *R, char* nomInstance);
 
-
 #endif
 
