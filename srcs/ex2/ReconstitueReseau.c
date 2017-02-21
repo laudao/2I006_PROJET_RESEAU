@@ -1,10 +1,12 @@
 #include "Reseau.h"
+#include "Hachage.h"
 
 int main(int argc, char **argv)
 {
 	char *nameFile;
 	FILE *fread;
 	FILE *fwrite;
+	int n;
 	Chaines *instance;
 	Reseau *R;
 
@@ -14,6 +16,7 @@ int main(int argc, char **argv)
 	}
 
 	nameFile = strdup(argv[1]);
+	n = atoi(argv[2]);
 	fread = fopen(nameFile, "r");
 
 	if (fread == NULL){
@@ -23,11 +26,19 @@ int main(int argc, char **argv)
 
 	instance = lectureChaine(fread);
 
-	if (strcmp(argv[2], "1") == 0){
-		R = reconstitueReseauListe(instance);	
-		fwrite = fopen("reconstitution.res", "w");
-		ecrireReseauTxt(R, fwrite);
-		afficheReseauSVG(R, "TestSVGReseau");
+	switch (n){
+		case 1:
+			R = reconstitueReseauListe(instance);	
+			fwrite = fopen("reconstitutionListe.res", "w");
+			ecrireReseauTxt(R, fwrite);
+			afficheReseauSVG(R, "TestSVGReseauListe");
+			break;
+		case 2:
+			R = reconstitueReseauHachage(instance);
+			fwrite = fopen("reconstitutionHachage.res", "w");
+			ecrireReseauTxt(R, fwrite);
+			afficheReseauSVG(R, "TestSVGReseauHachage");
+			break;
 	}
 	return 0;
 }

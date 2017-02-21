@@ -258,7 +258,7 @@ void afficheReseauSVG(Reseau *R, char *nomInstance)
 	SVGwriter *svg;
 	CellNoeud *cellNoeudCurr;
 	Noeud *noeudCurr;
-	CellNoeud *voisin;
+	CellNoeud *voisin; /* CellNoeud courant lors du parcours de la liste des voisins de noeudCurr */
 
 	svg = (SVGwriter *)malloc(sizeof(SVGwriter));
 
