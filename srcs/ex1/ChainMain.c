@@ -1,5 +1,5 @@
 #include "Chaine.h"
-
+//just to see how github works
 int main(int argc, char **argv){
 	char *nameFile;
 	FILE *f1;
