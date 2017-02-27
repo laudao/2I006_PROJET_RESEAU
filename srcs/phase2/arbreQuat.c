@@ -68,22 +68,6 @@ ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent);
 	if (*a == NULL){
 		nouveau = creerArbreQuat(n -> x, n -> y, (parent -> coteX) / 2, (parent -> coteY) / 2);
 		
-		if ((nouveau -> x < parent -> x) && (nouveau -> y > parent -> y)){
-			parent -> no = nouveau;
-		} 
-		
-		if ((nouveau -> x > parent -> x) && (nouveau -> y > parent -> y)){
-			parent -> ne = nouveau;
-		} 
-		
-		if ((nouveau -> x < parent -> x) && (nouveau -> y < parent -> y)){
-			parent -> so = nouveau;
-		} 
-		
-		if ((nouveau -> x > parent -> x) && (nouveau -> y < parent -> y)){
-			parent -> se = nouveau;
-		} 
-		
 		return nouveau;
 	}
 	else{
