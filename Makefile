@@ -1,5 +1,5 @@
-EX1= ex1
-EX2= ex2
+PHASE1= phase1
+PHASE22= phase2
 
 CC= gcc
 CFLAGS= -Werror -Wextra -Wall
@@ -16,15 +16,15 @@ INC= -I includes/
 
 VPATH= srcs/ex1:srcs/ex2:srcs/ex4:srcs/shared
 
-all: $(EX1) $(EX2) $(EX4)
+all: $(PHASE1) $(PHASE2)
 
 ### Executables 
 
-$(EX1): $(OBJ1) $(OBJ_SHARED)
+$(PHASE1): $(OBJ1) $(OBJ_SHARED)
 	@$(CC) $(CFLAGS) -o $@ $^ $(INC) -lm	
 	@echo "Linking [$^]"
 
-$(EX2): $(OBJ2) $(OBJ_SHARED)
+$(PHASE2: $(OBJ2) $(OBJ_SHARED)
 	@$(CC) $(CFLAGS) -o $@ $^ $(INC) -lm
 	@echo "Linking [$^]"
 
@@ -47,7 +47,7 @@ clean:
 	rm $(OBJ1) $(OBJ2) $(OBJ_SHARED)
 
 fclean: clean
-	rm $(EX1) $(EX2) *.html
+	rm $(PHASE1) $(PHASE2)
 
 re: fclean all
 

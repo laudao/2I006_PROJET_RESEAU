@@ -1,4 +1,5 @@
 #include "Reseau.h"
+#include "arbreQuat.h"
 
 void chaineCoordMinMax(Chaines *C, double *xmin, double *ymin, double *xmax, double *ymax)
 {
@@ -55,40 +56,80 @@ ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY)
 	
 	return nouveau;
 }
-
 ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent);
 {
 	ArbreQuat *nouveau;
-	
-	//if (*parent=NULL){
-	// coordonnees: centre
- 	//return creerArbreQuat(n -> x, n -> y,coteX, coteY);
-	//}
-	
-	if (*a == NULL){
-		nouveau = creerArbreQuat(n -> x, n -> y, (parent -> coteX) / 2, (parent -> coteY) / 2);
-		
+	Noeud *noeudStocke;
+
+	if (a == NULL){
+		/* les dimensions de la nouvelle cellule correspondent a la moitie de la cellule parent
+			les deux premiers parametres correspondent aux coordonnees du centre de la cellule
+		*/
+		nouveau = creerArbreQuat((parent -> coteX)/4, (parent -> coteY)/4, (parent -> coteX) / 2, (parent -> coteY) / 2);
+		nouveau -> noeud = n;
 		return nouveau;
 	}
 	else{
 		if (a -> noeud != NULL){
-			a -> noeud = NULL;
+			noeudStocke = a -> noeud; /* on recupere le noeud deja stocke */
+			a -> noeud = NULL; 
+				
+			/* n doit etre place au nord-ouest de la cellule */
 			if ((n -> x < a -> xc) && (n -> y > a -> yc)){
-				a -> no = insererNoeudArbre(n, a, parent);
+				a -> no = insererNoeudArbre(n, a -> no, a);
 			} 
-		
-		if ((nouveau -> x > parent -> x) && (nouveau -> y > parent -> y)){
-			parent -> ne = nouveau;
+			
+			if ((noeudStocke -> x < a -> xc) && (noeudStocke -> y > a -> yc)){
+				a -> no = insererNoeudArbre(noeudStocke, a -> no, a);
+			}
+			/* au nord-est */
+			if ((n -> x > a -> xc) && (n -> y > a -> yc)){
+				a -> ne = insererNoeudArbre(n, a -> ne, a);
+			} 
+			
+			if ((noeudStocke -> x > a -> xc) && (noeudStocke -> y > a -> yc)){
+				a -> ne = insererNoeudArbre(noeudStocke, a -> ne, a);
+			} 
+
+			/* au sud-ouest */
+			if ((n -> x < a -> xc) && (n -> y < a -> yc)){
+				a-> so = insererNoeudArbre(n, a -> so, a);
+			} 
+			
+			if ((noeudStocke -> x > a -> xc) && (noeudStocke -> y > a -> yc)){
+				a -> so = insererNoeudArbre(noeudStocke, a -> so, a);
+			} 
+
+			/* au sud-est */
+			if ((n -> x > a -> xc) && (n -> y < a -> yc)){
+				a-> se = insererNoeudArbre(n, a -> se, a);
+			}
+			
+			if ((noeudStocke -> x > a -> xc) && (noeudStocke -> y < a -> yc)){
+				a-> se = insererNoeudArbre(noeudStocke, a -> se, a);
+			}
+
+			return a;
 		} 
-		
-		if ((nouveau -> x < parent -> x) && (nouveau -> y < parent -> y)){
-			parent -> so = nouveau;
-		} 
-		
-		if ((nouveau -> x > parent -> x) && (nouveau -> y < parent -> y)){
-			parent -> se = nouveau;
-		} 
-	
+		/* A != NULL et A -> noeud == NULL */
+		else{
+			if ((n -> x < a -> xc) && (n -> y > a -> yc)){
+				a -> no = insererNoeudArbre(n, a -> no, a);
+			}
+
+			if ((n -> x > a -> xc) && (n -> y > a -> yc)){
+				a -> ne = insererNoeudArbre(n, a -> ne, a);
+			}
+
+			if ((n -> x < a -> xc) && (n -> y < a -> yc)){
+				a-> so = insererNoeudArbre(n, a -> so, a);
+			}
+
+			if ((n -> x > a -> xc) && (n -> y < a -> yc)){
+				a-> se = insererNoeudArbre(n, a -> se, a);
+			}
+			return a;
+		}
 }
 
 Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat* parent);
