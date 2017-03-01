@@ -134,6 +134,48 @@ ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent);
 
 Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat* parent);
 {
+
+	if(*aptr==NULL){
+	
+	Noeud *n=creerNoeud(R, pt->x, pt->y);
+	ajoutNoeudReseau(R,n);
+	insererNoeudArbre(n,aptr,parent);
+	printf("noeud (%f,%f) ajouté\n",noud->x,noud->y));
+	
+	return aptr->noud;
+	}
+	
+	else{
+		if(*aptr->noud!=NULL){	
+			if(aptr->noud->x==pt->x && aptr->noud->y==pt->y){
+				printf("noeud (%f,%f) trouvé\n",noud->x,noud->y);
+				return aptr->noud;
+			}
+			else{
+				Noeud *n=creerNoeud(R, pt->x, pt->y);
+				joutNoeudReseau(R,n);
+				insererNoeudArbre(n,aptr,parent);
+				printf("noeud (%f,%f) ajouté\n",noud->x,noud->y));
+				return aptr->noud;
+			}
+		
+		}
+	
+		if ((pt -> x < aptr -> xc) && (pt -> y > aptr -> yc)){
+				chercherNoeudArbre(pt,R,aptr->no,aptr);
+			}
+		if ((pt -> x > aptr -> xc) && (pt -> y > aptr -> yc)){
+				chercherNoeudArbre(pt,R,aptr->ne,aptr);
+			}
+
+		if ((pt -> x < aptr -> xc) && (pt -> y < aptr -> yc)){
+				chercherNoeudArbre(pt,R,aptr->so,aptr);
+			}
+		if ((pt -> x > aptr -> xc) && (pt -> y < aptr -> yc)){
+				chercherNoeudArbre(pt,R,aptr_>se,aptr);
+			}
+	
+	}
 	return NULL;
 }
 
