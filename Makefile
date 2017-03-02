@@ -1,11 +1,11 @@
 PHASE1= phase1
-PHASE22= phase2
+PHASE2= phase2
 
 CC= gcc
 CFLAGS= -Werror -Wextra -Wall
 
 SRC1= ChainMain.c
-SRC2= ReconstitueReseau.c Hachage.c
+SRC2= arbreQuat.c ReconstitueReseau.c Hachage.c
 SRC_SHARED= SVGwriter.c entree_sortie.c Chaine.c Reseau.c
 
 OBJ1= $(SRC1:.c=.o)
@@ -14,17 +14,17 @@ OBJ_SHARED= $(SRC_SHARED:.c=.o)
 
 INC= -I includes/
 
-VPATH= srcs/ex1:srcs/ex2:srcs/ex4:srcs/shared
+VPATH= srcs/phase1:srcs/phase2:srcs/shared
 
 all: $(PHASE1) $(PHASE2)
 
 ### Executables 
 
 $(PHASE1): $(OBJ1) $(OBJ_SHARED)
-	@$(CC) $(CFLAGS) -o $@ $^ $(INC) -lm	
+	@$(CC) $(CFLAGS) -o $@ $^ $(INC) -lm
 	@echo "Linking [$^]"
 
-$(PHASE2: $(OBJ2) $(OBJ_SHARED)
+$(PHASE2): $(OBJ2) $(OBJ_SHARED)
 	@$(CC) $(CFLAGS) -o $@ $^ $(INC) -lm
 	@echo "Linking [$^]"
 

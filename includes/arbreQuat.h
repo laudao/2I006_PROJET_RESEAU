@@ -24,6 +24,9 @@ void chaineCoordMinMax(Chaines *C, double *xmin, double *ymin, double *xmax, dou
 */
 ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY);
 
+/* initialise un arbre parent a partir de chaines */
+ArbreQuat* initialise_parent(Chaines *C);
+
 /* insere un Noeud du reseau dans l'arbre quaternaire */
 ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent);
 
