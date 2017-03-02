@@ -140,7 +140,7 @@ Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat*
 	Noeud *n=creerNoeud(R, pt->x, pt->y);
 	ajoutNoeudReseau(R,n);
 	insererNoeudArbre(n,aptr,parent);
-	printf("noeud (%f,%f) ajouté\n",noud->x,noud->y));
+	printf("noeud (%f,%f) ajouté\n",noud->x,noud->y)
 	
 	return aptr->noud;
 	}
@@ -155,7 +155,7 @@ Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat*
 				Noeud *n=creerNoeud(R, pt->x, pt->y);
 				joutNoeudReseau(R,n);
 				insererNoeudArbre(n,aptr,parent);
-				printf("noeud (%f,%f) ajouté\n",noud->x,noud->y));
+				printf("noeud (%f,%f) ajouté\n",noud->x,noud->y)
 				return aptr->noud;
 			}
 		
@@ -181,5 +181,68 @@ Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat*
 
 Reseau* recreeReseauArbre(Chaines* C)
 {
-	return NULL;
+CellChaine *chaine; /* chaine courante */
+	CellPoint *point; /* point courant dans la chaine courante */
+	Noeud *noeudCurr; /* noeudCourant correspondant au point courant */
+	Noeud *extrA; /* extremite A d'une chaine */
+	Noeud *extrB; /* extremite B d'une chaine */
+	Noeud *prec; /* element precedent d'un noeud dans une chaine */
+
+	ArbreQuat** aptr;
+	ArbreQuat* parent=NULL;
+
+	/* initialisation du reseau R */
+	Reseau *R = (Reseau *)malloc(sizeof(Reseau));
+	R -> nbNoeuds = 0;
+	R -> gamma = C -> gamma;
+	R -> noeuds = NULL;
+	R -> commodites = NULL;
+	
+	/* initialisation de l'arbre quaternaire parent */
+	parent = initialise_parent(C); 
+	*aptr = parent;
+
+	chaine = C -> chaines;
+
+	/* on parcourt chaque point de chaque chaine de C et on l'ajoute a la liste de noeuds de R s'il n'est pas present */
+	while (chaine){
+		point = chaine -> points;
+		prec = NULL;
+
+		/* extremite de la chaine */
+		if (point){
+			extrA = chercherNoeudArbre(point,R,*aptr,parent);
+		}
+
+		while (point){
+			
+			/* on ajoute le noeud si on ne l'a pas deja rencontre */
+			/* noeudCurr = le Noeud correspondant a point */
+			noeudCurr  = chercherNoeudArbre(point,R,*aptr,parent);
+
+			/* on ajoute ses voisins */
+			if (prec){
+				ajoutCellNoeudVoisin(noeudCurr, prec); /* son voisin precedent */
+			}
+			/* son voisin suivant */
+			if (point -> suiv){
+				ajoutCellNoeudVoisin(noeudCurr,chercherNoeudArbre(point->suiv,R,p_Arbre,parent));
+			}
+
+			prec = noeudCurr;
+			point = point -> suiv;
+		}
+
+		/* la chaine compte plus d'un point */
+		if (comptePoints(chaine) > 1){
+			extrB = prec;
+			ajoutCellCommodite(R, creerCellCommodite(extrA, extrB));			
+		}
+
+		chaine = chaine -> suiv;
+	}
+
+	return R;
+}
+
 }
