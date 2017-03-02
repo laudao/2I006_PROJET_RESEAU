@@ -147,6 +147,7 @@ ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent);
 
 Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat* parent);
 {
+
 	Noeud *n;
 	/* arbre vide*/
 	if(*aptr == NULL){
@@ -200,7 +201,6 @@ Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat*
 
 Reseau* recreeReseauArbre(Chaines* C)
 {
-
 	CellChaine *chaine; /* chaine courante */
 	CellPoint *point; /* point courant dans la chaine courante */
 	Noeud *noeudCurr; /* noeudCourant correspondant au point courant */
@@ -231,14 +231,14 @@ Reseau* recreeReseauArbre(Chaines* C)
 
 		/* extremite de la chaine */
 		if (point){
-			extrA = chercherNoeudArbre(point,R,p_Arbre,parent);
+			extrA = chercherNoeudArbre(point,R,*aptr,parent);
 		}
 
 		while (point){
 			
 			/* on ajoute le noeud si on ne l'a pas deja rencontre */
 			/* noeudCurr = le Noeud correspondant a point */
-			noeudCurr  = chercherNoeudArbre(point,R,p_Arbre,parent);
+			noeudCurr  = chercherNoeudArbre(point,R,*aptr,parent);
 
 			/* on ajoute ses voisins */
 			if (prec){
@@ -264,4 +264,5 @@ Reseau* recreeReseauArbre(Chaines* C)
 
 	return R;
 }
+
 }
