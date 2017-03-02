@@ -1,5 +1,6 @@
 #include "Reseau.h"
 #include "Hachage.h"
+#include "arbreQuat.h"
 
 int main(int argc, char **argv)
 {
@@ -38,6 +39,12 @@ int main(int argc, char **argv)
 			fwrite = fopen("reconstitutionHachage.res", "w");
 			ecrireReseauTxt(R, fwrite);
 			afficheReseauSVG(R, "TestSVGReseauHachage");
+			break;
+		case 3:
+			R = recreeReseauArbre(instance);
+			fwrite = fopen("reconstitutionArbre.res", "w");
+			ecrireReseauTxt(R, fwrite);
+			afficheReseauSVG(R, "TestSVGReseauArbre");
 			break;
 	}
 	return 0;
