@@ -56,11 +56,23 @@ ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY)
 	
 	return nouveau;
 }
+
+ArbreQuat* initialise_parent(Chaines *C)
+{
+	int xmin, ymin, xmax, ymax;
+	xmin=0;
+	ymin=0;
+	xmax=0;
+	ymax=0;
+	chaineCoordMinMax(C,&xmin,&ymin,&xmax,&ymax);
+	return creerArbreQuat(xmax-xmin/2,ymax-ymin/2,xmax-xmin,ymax-ymin);
+}
+
 ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent);
 {
 	ArbreQuat *nouveau;
 	Noeud *noeudStocke;
-
+	
 	if (a == NULL){
 		/* les dimensions de la nouvelle cellule correspondent a la moitie de la cellule parent
 			les deux premiers parametres correspondent aux coordonnees du centre de la cellule
@@ -82,6 +94,7 @@ ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent);
 			if ((noeudStocke -> x < a -> xc) && (noeudStocke -> y > a -> yc)){
 				a -> no = insererNoeudArbre(noeudStocke, a -> no, a);
 			}
+			
 			/* au nord-est */
 			if ((n -> x > a -> xc) && (n -> y > a -> yc)){
 				a -> ne = insererNoeudArbre(n, a -> ne, a);
@@ -135,53 +148,60 @@ ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent);
 Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat* parent);
 {
 
-	if(*aptr==NULL){
+	Noeud *n;
+	/* arbre vide*/
+	if(*aptr == NULL){
+		n = creerNoeud(R, pt -> nd->x, pt -> nd->y); /* creation du noeud */
+		ajoutNoeudReseau(R, n); /* ajout du noeud au reseau */
+		*aptr = insererNoeudArbre(n, *aptr, parent); /* insertion du noeud dans l'arbre*/
+		printf("noeud (%f,%f) ajouté\n", n->x, n->y);
 	
-	Noeud *n=creerNoeud(R, pt->x, pt->y);
-	ajoutNoeudReseau(R,n);
-	insererNoeudArbre(n,aptr,parent);
-	printf("noeud (%f,%f) ajouté\n",noud->x,noud->y)
-	
-	return aptr->noud;
+		return n;
 	}
-	
 	else{
-		if(*aptr->noud!=NULL){	
-			if(aptr->noud->x==pt->x && aptr->noud->y==pt->y){
-				printf("noeud (%f,%f) trouvé\n",noud->x,noud->y);
-				return aptr->noud;
+		/* feuille */
+		if((*aptr) -> noeud != NULL){	
+			/* le noeud que l'on cherche correspond a celui de la feuille */
+			if((*aptr) -> noeud -> x == pt -> nd -> x && (*aptr) -> noeud -> y == pt -> nd -> y){
+				printf("noeud (%f,%f) trouvé\n", noeud->x,noeud->y);
+				return (*aptr)->noeud;
 			}
+			/* sinon */
 			else{
-				Noeud *n=creerNoeud(R, pt->x, pt->y);
-				joutNoeudReseau(R,n);
-				insererNoeudArbre(n,aptr,parent);
-				printf("noeud (%f,%f) ajouté\n",noud->x,noud->y)
-				return aptr->noud;
+				n = creerNoeud(R, pt -> nd->x, pt -> nd->y); /* on cree le noeud*/
+				ajoutNoeudReseau(R, n); /* on ajoute au reseau R */
+				*aptr = insererNoeudArbre(n, *aptr, parent); /* insertion dans l'arbre*/
+				printf("noeud (%f,%f) ajouté\n",n->x,n->y));
+				return n;
 			}
 		
 		}
-	
-		if ((pt -> x < aptr -> xc) && (pt -> y > aptr -> yc)){
-				chercherNoeudArbre(pt,R,aptr->no,aptr);
+		/* cellule interne */
+		else{
+			/* nord-ouest */
+			if ((pt -> nd -> x < (*aptr)-> xc) && (pt -> nd -> y > (*aptr) -> yc)){
+				n = chercherNoeudArbre(pt,R,(*aptr)->no,aptr);
 			}
-		if ((pt -> x > aptr -> xc) && (pt -> y > aptr -> yc)){
-				chercherNoeudArbre(pt,R,aptr->ne,aptr);
+			/* nord-est */
+			if ((pt -> nd -> x > (*aptr) -> xc) && (pt -> nd -> y > (*aptr) -> yc)){
+				n = chercherNoeudArbre(pt,R,(*aptr)->ne,aptr);
 			}
-
-		if ((pt -> x < aptr -> xc) && (pt -> y < aptr -> yc)){
-				chercherNoeudArbre(pt,R,aptr->so,aptr);
+			/* sud-ouest*/
+			if ((pt -> nd -> x < (*aptr) -> xc) && (pt -> nd -> y < (*aptr)-> yc)){
+				n = chercherNoeudArbre(pt,R,(*aptr)->so,aptr);
 			}
-		if ((pt -> x > aptr -> xc) && (pt -> y < aptr -> yc)){
-				chercherNoeudArbre(pt,R,aptr_>se,aptr);
+			/* sud-est*/
+			if ((pt -> nd -> x > (*aptr) -> xc) && (pt -> nd-> y < (*aptr)-> yc)){
+				n = chercherNoeudArbre(pt,R,(*aptr)_>se,aptr);
 			}
-	
+			return n;
+		}
 	}
-	return NULL;
 }
 
 Reseau* recreeReseauArbre(Chaines* C)
 {
-CellChaine *chaine; /* chaine courante */
+	CellChaine *chaine; /* chaine courante */
 	CellPoint *point; /* point courant dans la chaine courante */
 	Noeud *noeudCurr; /* noeudCourant correspondant au point courant */
 	Noeud *extrA; /* extremite A d'une chaine */
