@@ -3,6 +3,7 @@
 
 tableHachage *initTableHachage(int m)
 {
+	int i;
 	tableHachage *tableH = (tableHachage *)malloc(sizeof(tableHachage));
 
 	if (tableH == NULL){
@@ -14,6 +15,10 @@ tableHachage *initTableHachage(int m)
 	tableH -> m = m;
 	/* allocation d'un tableau de m pointeurs sur CellNoeud */
 	tableH -> tab = (CellNoeud **)malloc(sizeof(CellNoeud *) * m);
+
+	for (i = 0; i < m; i++){
+		tableH -> tab[i] = NULL;
+	}
 
 	return tableH;
 }
@@ -39,12 +44,11 @@ Noeud* rechercheCreeNoeudHachage(Reseau *R, tableHachage* H, double x, double y)
 
 	/* parcours de la liste contenue dans la case d'indice indice du tableau de hachage */
 	while((curr) && ((curr -> nd -> x != x ) || (curr->nd->y != y))){
-		curr=curr->suiv;
+		curr = curr->suiv;
 	} 
-
+	
 	/* le Noeud se trouve dans la liste */
-	if(curr){
-		printf("Noeud (%f,%f) trouve\n", x, y);
+	if (curr){
 		noeud = curr -> nd;
 	}
 	/* pas dans la liste */
