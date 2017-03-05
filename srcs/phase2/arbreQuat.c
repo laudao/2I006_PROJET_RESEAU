@@ -65,7 +65,6 @@ ArbreQuat* initialise_parent(Chaines *C)
 	xmax = 0;
 	ymax = 0;
 	chaineCoordMinMax(C, &xmin, &ymin, &xmax, &ymax);
-	printf("%f %f %f %f\n", xmin, ymin, xmax, ymax);
 	return creerArbreQuat(xmin + ((xmax-xmin)/2), ymin + ((ymax-ymin)/2) ,xmax-xmin,ymax-ymin);
 }
 
@@ -80,29 +79,31 @@ ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent)
 		/* les dimensions de la nouvelle cellule correspondent a la moitie de la cellule parent
 			les deux premiers parametres correspondent aux coordonnees du centre de la cellule
 		*/
-		printf("coordonnees parent: %f %f\n", parent -> xc, parent -> yc);
-		printf("longueur et hauteur parent: %f %f\n", parent -> coteX, parent -> coteY);
+
+		/* insertion nord ouest */ 
 		if ((n -> x < parent -> xc) && (n -> y > parent -> yc)){
 			xc = (parent -> xc)	- ((parent -> coteX)/4);
-			yc = (parent -> yc) - ((parent -> coteX)/4);
+			yc = (parent -> yc) - ((parent -> coteY)/4);
 		}
 
+		/* insertion nord est */ 
 		if ((n -> x > parent -> xc) && (n -> y > parent -> yc)){
 			xc = (parent -> xc)	+ ((parent -> coteX)/4);
-			yc = (parent -> yc) + ((parent -> coteX)/4);
+			yc = (parent -> yc) + ((parent -> coteY)/4);
 		}
 
+		/* insertion sud ouest */ 
 		if ((n -> x < parent -> xc) && (n -> y < parent -> yc)){
 			xc = (parent -> xc)	- ((parent -> coteX)/4);
-			yc = (parent -> yc) - ((parent -> coteX)/4);
+			yc = (parent -> yc) - ((parent -> coteY)/4);
 		}
 
+		/* insertion sud est */ 
 		if ((n -> x > parent -> xc) && (n -> y < parent -> yc)){
 			xc = (parent -> xc)	+ ((parent -> coteX)/4);
-			yc = (parent -> yc) - ((parent -> coteX)/4);
+			yc = (parent -> yc) - ((parent -> coteY)/4);
 		}
 		
-		printf("xc = %f, yc = %f\n", xc, yc);
 		nouveau = creerArbreQuat(xc, yc, (parent -> coteX) / 2, (parent -> coteY) / 2);
 		nouveau -> noeud = n;
 		return nouveau;
@@ -110,7 +111,6 @@ ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent)
 	else{
 		if (a -> noeud != NULL){
 			noeudStocke = a -> noeud; /* on recupere le noeud deja stocke */
-			printf("noeud deja stocke: %f %f\n", noeudStocke -> x, noeudStocke -> y);
 			a -> noeud = NULL; 
 			a = insererNoeudArbre(n, a, parent);
 			a = insererNoeudArbre(noeudStocke, a, parent);
@@ -186,8 +186,6 @@ Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat*
 		n = creerNoeud(R, pt -> x, pt -> y); /* creation du noeud */
 		ajoutNoeudReseau(R, n); /* ajout du noeud au reseau */
 		*aptr = insererNoeudArbre(n, *aptr, parent); /* insertion du noeud dans l'arbre*/
-		printf("noeud (%f,%f) ajouté\n", n->x, n->y);
-	
 		return n;
 	}
 	else{
@@ -195,18 +193,13 @@ Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat*
 		if((*aptr) -> noeud != NULL){
 			/* le noeud que l'on cherche correspond a celui de la feuille */
 			if((*aptr) -> noeud -> x == pt -> x && (*aptr) -> noeud -> y == pt -> y){
-				printf("noeud (%f,%f) trouvé\n", (*aptr) -> noeud -> x,(*aptr) -> noeud -> y);
 				return (*aptr)->noeud;
 			}
 			/* sinon */
 			else{
-				printf("il y a deja quelqu'un\n");
 				n = creerNoeud(R, pt ->x, pt -> y); /* on cree le noeud*/
 				ajoutNoeudReseau(R, n); /* on ajoute au reseau R */
-				printf("parent %f %f\n", parent -> xc, parent -> yc);
-				printf("aptr %f %f\n", (*aptr) -> xc, (*aptr) -> yc);
 				*aptr = insererNoeudArbre(n, *aptr, parent); /* insertion dans l'arbre*/
-				printf("noeud (%f,%f) ajouté\n",n->x,n->y);
 				return n;
 			}
 		
@@ -228,7 +221,6 @@ Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat*
 			}
 			/* sud-est*/
 			if ((pt ->  x > (*aptr) -> xc) && (pt -> y < (*aptr)-> yc)){
-			
 				n = chercherNoeudArbre(pt,R,&((*aptr)->se), *aptr);
 			}
 			return n;
@@ -259,7 +251,6 @@ Reseau* recreeReseauArbre(Chaines* C)
 	/* initialisation de l'arbre quaternaire parent */
 	parent = initialise_parent(C); 
 	aptr = parent;
-	printf("parent: %f %f %f %f\n", parent -> xc, parent -> yc, parent -> coteX, parent -> coteY);
 	
 	chaine = C -> chaines;
 
@@ -270,7 +261,6 @@ Reseau* recreeReseauArbre(Chaines* C)
 
 		/* extremite de la chaine */
 		if (point){
-			printf("noeud a ajouter: %f %f\n", point -> x, point -> y);
 			extrA = chercherNoeudArbre(point,R,&aptr,parent);
 		}
 
@@ -279,18 +269,16 @@ Reseau* recreeReseauArbre(Chaines* C)
 			/* on ajoute le noeud si on ne l'a pas deja rencontre */
 			/* noeudCurr = le Noeud correspondant a point */
 
-			printf("noeud a ajouter: %f %f\n", point -> x, point -> y);
 			noeudCurr  = chercherNoeudArbre(point,R,&aptr,parent);
 
 			/* on ajoute ses voisins */
 			if (prec){
 				ajoutCellNoeudVoisin(noeudCurr, prec); /* son voisin precedent */
 			}
+		
 			
 			/* son voisin suivant */
 			if (point -> suiv){
-
-				printf("noeud suivant a ajouter: %f %f\n", point -> suiv -> x, point -> suiv -> y);
 				ajoutCellNoeudVoisin(noeudCurr, chercherNoeudArbre(point->suiv,R,&aptr,parent));
 			}
 
@@ -309,4 +297,3 @@ Reseau* recreeReseauArbre(Chaines* C)
 
 	return R;
 }
-

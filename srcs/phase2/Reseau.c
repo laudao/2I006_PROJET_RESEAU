@@ -13,6 +13,7 @@ Noeud *creerNoeud(Reseau *R, double x, double y)
 	nouveau -> num = R -> nbNoeuds;
 	nouveau -> x = x;
 	nouveau -> y = y;
+	nouveau -> voisins = NULL;
 
 	return nouveau;
 }
@@ -81,9 +82,9 @@ void ajoutCellNoeudVoisin(Noeud *noeud, Noeud *voisin)
 {
 	CellNoeud *cellNoeudVoisin;
 	CellNoeud *tmp;
-
+	
 	tmp = noeud -> voisins;
-
+	
 	/* voisin est peut etre deja dans la liste des voisins de noeuds
 		 parcours de la liste des voisins pour verifier */
 	while ((tmp) && (tmp -> nd -> num != voisin -> num)){	
@@ -265,8 +266,7 @@ void afficheReseauSVG(Reseau *R, char *nomInstance)
 	/* initialise svg avec nomInstance pour nom du fichier html a creer 
 		 et avec une taille de 500x500 pixels */
 	SVGinit(svg, nomInstance, 500, 500);
-//	SVGlineRandColor(svg); /* couleur aleatoire pour les lignes */
-	SVGlineColor(svg, Black);
+	SVGlineRandColor(svg); /* couleur aleatoire pour les lignes */
 	SVGpointColor(svg, Red);  /* fixe la couleur des points a rouge */
 
 	cellNoeudCurr = R -> noeuds;

@@ -2,7 +2,7 @@ PHASE1= phase1
 PHASE2= phase2
 
 CC= gcc
-CFLAGS= -Werror -Wextra -Wall
+CFLAGS= -Werror -Wextra -Wall -fsanitize=address
 
 SRC1= ChainMain.c
 SRC2= arbreQuat.c ReconstitueReseau.c Hachage.c
