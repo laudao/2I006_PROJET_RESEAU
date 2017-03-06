@@ -1,0 +1,6 @@
+Reconstitution avec liste chainee:
+Temps cpu: 0.000045
+Reconstitution avec table de hachage:
+Temps cpu: 0.000115
+Reconstitution avec arbre quaternaire:
+Temps cpu: 0.000148

@@ -14,8 +14,7 @@ typedef struct arbreQuat{
 	struct arbreQuat *ne;  /* Sous-arbre nord-est, pour x >= xc et y >= yc */
 } ArbreQuat;
 
-/* determine les coordonnees minimales et maximales des points constituant les differentes
-	chaines du reseau */
+/* determine les coordonnees minimales et maximales des points constituant les differentes chaines du reseau */
 void chaineCoordMinMax(Chaines *C, double *xmin, double *ymin, double *xmax, double *ymax);
 
 /* cree une cellule de l'arbre quaternaire, de centre (xc, yc), 
