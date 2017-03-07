@@ -57,6 +57,9 @@ void ajoutCellCommodite(Reseau *R, CellCommodite *cellComm);
 /* cree un CellNoeud qui pointe sur voisin et l'ajoute a la liste de voisins de noeud */
 void ajoutCellNoeudVoisin(Noeud *noeud, Noeud *voisin);
 
+/* Initialise un Reseau avec une chaines */
+Reseau* initialiseReseau(Chaines *C);
+
 /* reconstruit le reseau R a partir de la liste des chaines C
 	 et en utilisant pour structure directement la liste chainee noeud */
 Reseau* reconstitueReseauListe(Chaines *C);

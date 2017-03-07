@@ -1,6 +1,7 @@
 #include "Reseau.h"
 #include "Hachage.h"
 #include "arbreQuat.h"
+#include <time.h>
 
 int main(int argc, char **argv)
 {
@@ -19,7 +20,7 @@ int main(int argc, char **argv)
 	nameFile = strdup(argv[1]);
 	n = atoi(argv[2]);
 	fread = fopen(nameFile, "r");
-
+	
 	if (fread == NULL){
 		fprintf(stderr, "Erreur lors de l'ouverture du fichier %s\n", nameFile);
 		return 1;
@@ -29,23 +30,35 @@ int main(int argc, char **argv)
 
 	switch (n){
 		case 1:
+			printf("Reconstitution avec liste chainee:\n");
+
 			R = reconstitueReseauListe(instance);	
+
 			fwrite = fopen("reconstitutionListe.res", "w");
 			ecrireReseauTxt(R, fwrite);
 			afficheReseauSVG(R, "TestSVGReseauListe");
 			break;
 		case 2:
+			printf("Reconstitution avec table de hachage:\n");
+
 			R = reconstitueReseauHachage(instance);
+			
 			fwrite = fopen("reconstitutionHachage.res", "w");
 			ecrireReseauTxt(R, fwrite);
 			afficheReseauSVG(R, "TestSVGReseauHachage");
 			break;
 		case 3:
+			printf("Reconstitution avec arbre quaternaire:\n");
+			
 			R = recreeReseauArbre(instance);
+			
 			fwrite = fopen("reconstitutionArbre.res", "w");
 			ecrireReseauTxt(R, fwrite);
 			afficheReseauSVG(R, "TestSVGReseauArbre");
 			break;
 	}
+
+	fclose(fwrite);
+	fclose(fread);
 	return 0;
 }

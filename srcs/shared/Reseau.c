@@ -13,6 +13,7 @@ Noeud *creerNoeud(Reseau *R, double x, double y)
 	nouveau -> num = R -> nbNoeuds;
 	nouveau -> x = x;
 	nouveau -> y = y;
+	nouveau -> voisins = NULL;
 
 	return nouveau;
 }
@@ -81,9 +82,9 @@ void ajoutCellNoeudVoisin(Noeud *noeud, Noeud *voisin)
 {
 	CellNoeud *cellNoeudVoisin;
 	CellNoeud *tmp;
-
+	
 	tmp = noeud -> voisins;
-
+	
 	/* voisin est peut etre deja dans la liste des voisins de noeuds
 		 parcours de la liste des voisins pour verifier */
 	while ((tmp) && (tmp -> nd -> num != voisin -> num)){	
@@ -97,6 +98,23 @@ void ajoutCellNoeudVoisin(Noeud *noeud, Noeud *voisin)
 	}
 }
 
+Reseau* initialiseReseau(Chaines *C)
+{
+	Reseau *nouv = (Reseau *)malloc(sizeof(Reseau));
+
+	if (!nouv){
+		fprintf(stderr, "Erreur lors de l'allocation du Reseau\n");
+		exit(1);
+	}
+
+	nouv -> nbNoeuds = 0;
+	nouv -> gamma = C -> gamma;
+	nouv -> noeuds = NULL;
+	nouv -> commodites = NULL;
+
+	return nouv;
+}
+
 Reseau *reconstitueReseauListe(Chaines *C)
 {
 	CellChaine *chaine; /* chaine courante */
@@ -105,13 +123,10 @@ Reseau *reconstitueReseauListe(Chaines *C)
 	Noeud *extrA; /* extremite A d'une chaine */
 	Noeud *extrB; /* extremite B d'une chaine */
 	Noeud *prec; /* element precedent d'un noeud dans une chaine */
+	Reseau *R; /* le Reseau */
 
 	/* initialisation du reseau R */
-	Reseau *R = (Reseau *)malloc(sizeof(Reseau));
-	R -> nbNoeuds = 0;
-	R -> gamma = C -> gamma;
-	R -> noeuds = NULL;
-	R -> commodites = NULL;
+	R = initialiseReseau(C);
 
 	chaine = C -> chaines;
 	/* on parcourt chaque point de chaque chaine de C et on l'ajoute a la liste de noeuds de R s'il n'est pas present */
@@ -217,6 +232,7 @@ void ecrireReseauTxt(Reseau *R, FILE *f)
 	fprintf(f, "NbLiaison: %d\n", nbLiaison(R));
 	fprintf(f, "NbCommodite: %d\n", nbCommodites(R));
 	fprintf(f, "Gamma: %d\n", R -> gamma);
+	fprintf(f, "\n");
 
 	cellNoeudCurr = R -> noeuds;
 
@@ -226,6 +242,8 @@ void ecrireReseauTxt(Reseau *R, FILE *f)
 		fprintf(f, "v %d %f %f\n", noeudCurr -> num, noeudCurr -> x, noeudCurr -> y);
 		cellNoeudCurr = cellNoeudCurr -> suiv;
 	}
+	
+	fprintf(f, "\n");
 
 	cellNoeudCurr = R -> noeuds;
 
@@ -245,6 +263,7 @@ void ecrireReseauTxt(Reseau *R, FILE *f)
 		cellNoeudCurr = cellNoeudCurr -> suiv;
 	}
 
+	fprintf(f, "\n");
 	comm = R -> commodites;
 
 	while (comm){
@@ -258,15 +277,14 @@ void afficheReseauSVG(Reseau *R, char *nomInstance)
 	SVGwriter *svg;
 	CellNoeud *cellNoeudCurr;
 	Noeud *noeudCurr;
-	CellNoeud *voisin; /* CellNoeud courant lors du parcours de la liste des voisins de noeudCurr */
+	CellNoeud *voisin;
 
 	svg = (SVGwriter *)malloc(sizeof(SVGwriter));
 
 	/* initialise svg avec nomInstance pour nom du fichier html a creer 
 		 et avec une taille de 500x500 pixels */
 	SVGinit(svg, nomInstance, 500, 500);
-//	SVGlineRandColor(svg); /* couleur aleatoire pour les lignes */
-	SVGlineColor(svg, Black);
+	SVGlineRandColor(svg); /* couleur aleatoire pour les lignes */
 	SVGpointColor(svg, Red);  /* fixe la couleur des points a rouge */
 
 	cellNoeudCurr = R -> noeuds;

@@ -1,4 +1,5 @@
 #include "Hachage.h"
+#include "Reseau.h"
 #define A ((sqrt(5) - 1) / 2)
 
 tableHachage *initTableHachage(int m)
@@ -73,13 +74,10 @@ Reseau *reconstitueReseauHachage(Chaines *C)
 	Noeud *extrB; /* extremite B d'une chaine */
 	Noeud *prec; /* element precedent d'un noeud dans une chaine */
 	tableHachage *H; /* table de hachage */
-
+	Reseau *R;
+	
 	/* initialisation du reseau R */
-	Reseau *R = (Reseau *)malloc(sizeof(Reseau));
-	R -> nbNoeuds = 0;
-	R -> gamma = C -> gamma;
-	R -> noeuds = NULL;
-	R -> commodites = NULL;
+	R = initialiseReseau(C);
 
 	H = initTableHachage(100); /* initialisation d'une table de hachage de taille 100 */
 
