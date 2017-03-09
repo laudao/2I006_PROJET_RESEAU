@@ -1,6 +1,72 @@
+Instances_cha/00014_burma.cha
 Reconstitution avec liste chainee:
-Temps cpu: 0.000045
+Temps cpu: 0.000046
 Reconstitution avec table de hachage:
-Temps cpu: 0.000115
+Temps cpu: 0.000076
 Reconstitution avec arbre quaternaire:
-Temps cpu: 0.000148
+Temps cpu: 0.000164
+
+Instances_cha/00022_ulysses.cha
+Reconstitution avec liste chainee:
+Temps cpu: 0.000002
+Reconstitution avec table de hachage:
+Temps cpu: 0.000003
+Reconstitution avec arbre quaternaire:
+Temps cpu: 0.000002
+
+Instances_cha/00048_att.cha
+Reconstitution avec liste chainee:
+Temps cpu: 0.000002
+Reconstitution avec table de hachage:
+Temps cpu: 0.000003
+Reconstitution avec arbre quaternaire:
+Temps cpu: 0.000004
+
+Instances_cha/00052_berlin.cha
+Reconstitution avec liste chainee:
+Temps cpu: 0.000001
+Reconstitution avec table de hachage:
+Temps cpu: 0.000001
+Reconstitution avec arbre quaternaire:
+Temps cpu: 0.000002
+
+Instances_cha/00076_eil.cha
+Reconstitution avec liste chainee:
+Temps cpu: 0.000000
+Reconstitution avec table de hachage:
+Temps cpu: 0.000004
+Reconstitution avec arbre quaternaire:
+Temps cpu: 0.000002
+
+Instances_cha/00100_USA-road-d-NY-1-100.cha
+Reconstitution avec liste chainee:
+Temps cpu: 0.000129
+Reconstitution avec table de hachage:
+Temps cpu: 0.000097
+Reconstitution avec arbre quaternaire:
+Temps cpu: 0.000980
+
+Instances_cha/00101_eil.cha
+Reconstitution avec liste chainee:
+Temps cpu: 0.000001
+Reconstitution avec table de hachage:
+Temps cpu: 0.000002
+Reconstitution avec arbre quaternaire:
+Temps cpu: 0.000002
+
+Instances_cha/00144_pr.cha
+Reconstitution avec liste chainee:
+Temps cpu: 0.000003
+Reconstitution avec table de hachage:
+Temps cpu: 0.000003
+Reconstitution avec arbre quaternaire:
+Temps cpu: 0.000002
+
+Instances_cha/00150_ch.cha
+Reconstitution avec liste chainee:
+Temps cpu: 0.000001
+Reconstitution avec table de hachage:
+Temps cpu: 0.000006
+Reconstitution avec arbre quaternaire:
+Temps cpu: 0.000001
+
