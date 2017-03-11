@@ -2,7 +2,6 @@
 
 Noeud *creerNoeud(Reseau *R, double x, double y)
 {
-	(R -> nbNoeuds)++; /* incrementation du nombre de noeuds de R */
 	Noeud *nouveau = (Noeud *)malloc(sizeof(Noeud));
 	
 	if (nouveau == NULL){
@@ -28,6 +27,7 @@ CellNoeud *creerCellNoeud(CellNoeud *liste, Noeud *noeud)
 
 void ajoutNoeudReseau(Reseau *R, Noeud *noeud)
 {
+	(R -> nbNoeuds)++; /* incrementation du nombre de noeuds de R */
 	/* creation du CellNoeud correspondant au noeud */
 	CellNoeud *nouveauCellNoeud = creerCellNoeud(R -> noeuds, noeud);
 
