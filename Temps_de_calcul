@@ -1,6 +1,8 @@
+Instances_cha/00014_burma.cha
 Reconstitution avec liste chainee:
-Temps cpu: 0.000045
+Temps cpu: 0.000128
 Reconstitution avec table de hachage:
-Temps cpu: 0.000115
+Temps cpu: 0.000180
 Reconstitution avec arbre quaternaire:
-Temps cpu: 0.000148
+Temps cpu: 0.000810
+

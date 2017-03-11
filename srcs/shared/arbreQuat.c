@@ -1,4 +1,5 @@
 #include "arbreQuat.h"
+#include <limits.h>
 
 void chaineCoordMinMax(Chaines *C, double *xmin, double *ymin, double *xmax, double *ymax)
 {
@@ -53,17 +54,21 @@ ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY)
 	nouveau -> no = NULL;
 	nouveau -> ne = NULL;
 	
+	printf("Arbre parent : %f %f %f %f\n", nouveau -> xc, nouveau -> yc, nouveau -> coteX, nouveau -> coteY);
+
 	return nouveau;
 }
 
 ArbreQuat* initialise_parent(Chaines *C)
 {
 	double xmin, ymin, xmax, ymax;
-	xmin = 1000000;
-	ymin = 1000000;
-	xmax = 0;
-	ymax = 0;
+	xmin = INT_MAX;
+	ymin = INT_MAX;
+	xmax = INT_MIN;
+	ymax = INT_MIN;
 	chaineCoordMinMax(C, &xmin, &ymin, &xmax, &ymax);
+
+	printf("xmin : %f, ymin: %f, xmax : %f, ymax : %f\n", xmin, ymin, xmax, ymax);
 	return creerArbreQuat(xmin + ((xmax-xmin)/2), ymin + ((ymax-ymin)/2) ,xmax-xmin,ymax-ymin);
 }
 
@@ -119,6 +124,7 @@ ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent)
 //		
 		nouveau = creerArbreQuat(xc, yc, (parent -> coteX) / 2, (parent -> coteY) / 2);
 		nouveau -> noeud = n; 
+		printf("Noeud (%f, %f) ajoute\n", n -> x, n -> y);
 		return nouveau;
 	}
 	else{
