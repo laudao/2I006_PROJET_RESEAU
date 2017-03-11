@@ -14,11 +14,11 @@ int main()
 	clock_t temps_final;
 	double temps_cpu;
 	int i;
-	char *tab_instances[9] = {"Instances_cha/00014_burma.cha", "Instances_cha/00022_ulysses.cha","Instances_cha/00100_USA-road-d-NY-1-100.cha", "Instances_cha/00150_ch.cha"};
+	char *tab_instances[] = {"Instances_cha/00022_ulysses.cha","Instances_cha/00100_USA-road-d-NY-1-100.cha", "Instances_cha/00150_ch.cha", "Instances_cha/07000_USA-road-d-NY.cha", "Instances_cha/10000_USA-road-d-NY.cha"};
 
 	f_temps_calcul = fopen("Temps_de_calcul", "w");
 	
-	for (i = 0; i < 9; i++){
+	for (i = 0; i < 5; i++){
 		nameFile = tab_instances[i];
 		fread = fopen(nameFile, "r");
 		
@@ -56,7 +56,8 @@ int main()
 		fprintf(f_temps_calcul, "Temps cpu: %f\n", temps_cpu);
 		fprintf(f_temps_calcul, "\n");
 		fclose(fread);
-		fclose(f_temps_calcul);
 	}
+
+	fclose(f_temps_calcul);
 	return 0;
 }
