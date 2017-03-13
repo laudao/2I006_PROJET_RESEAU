@@ -3,7 +3,7 @@ PHASE2= phase2
 COMPARAISON= comparaison
 
 CC= gcc
-CFLAGS= -Werror -Wextra -Wall -fsanitize=address
+CFLAGS= -Wextra -Wall -fsanitize=address
 
 SRC1= ChainMain.c
 SRC2= ReconstitueReseau.c

@@ -1,39 +1,5 @@
 #include "arbreQuat.h"
-#include <float.h>
 
-void chaineCoordMinMax(Chaines *C, double *xmin, double *ymin, double *xmax, double *ymax)
-{
-	CellChaine *chaine_curr;
-	CellPoint *point_curr;
-	
-	/* premiere chaine de la liste chainee de chaines de instance */
-	chaine_curr = C -> chaines;
-
-	while (chaine_curr){
-		/* premier point de la liste chainee de points de chaine_curr */
-		point_curr = chaine_curr -> points;
-		while (point_curr){
-			if(point_curr -> x > *xmax){
-				*xmax = point_curr -> x; 
-			}
-			 
-			if(point_curr -> y > *ymax){
-				*ymax = point_curr -> y; 
-			}
-			 
-			if(point_curr -> x < *xmin){
-				*xmin = point_curr -> x; 
-			}
-			if(point_curr -> y < *ymin){
-				*ymin = point_curr -> y; 
-			}
-			 
-			point_curr = point_curr -> suiv;
-		}
-
-		chaine_curr = chaine_curr -> suiv;
-	}
-}
 
 ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY)
 {

@@ -1,5 +1,6 @@
 #include "Chaine.h"
 #include "SVGwriter.h"
+#include <float.h>
 
 CellPoint *creerCellPoint(double x, double y){
 	CellPoint *nouveau = (CellPoint *)malloc(sizeof(CellPoint));
@@ -105,6 +106,41 @@ void ajout_en_tete_chaine(CellChaine *ch, Chaines *instance)
 	instance -> chaines = ch;
 
 }
+
+void chaineCoordMinMax(Chaines *C, double *xmin, double *ymin, double *xmax, double *ymax)
+{
+	CellChaine *chaine_curr;
+	CellPoint *point_curr;
+	
+	/* premiere chaine de la liste chainee de chaines de instance */
+	chaine_curr = C -> chaines;
+
+	while (chaine_curr){
+		/* premier point de la liste chainee de points de chaine_curr */
+		point_curr = chaine_curr -> points;
+		while (point_curr){
+			if(point_curr -> x > *xmax){
+				*xmax = point_curr -> x; 
+			}
+			 
+			if(point_curr -> y > *ymax){
+				*ymax = point_curr -> y; 
+			}
+			 
+			if(point_curr -> x < *xmin){
+				*xmin = point_curr -> x; 
+			}
+			if(point_curr -> y < *ymin){
+				*ymin = point_curr -> y; 
+			}
+			 
+			point_curr = point_curr -> suiv;
+		}
+
+		chaine_curr = chaine_curr -> suiv;
+	}
+}
+
 
 void afficheChaines(Chaines *instance)
 {
@@ -242,18 +278,29 @@ void afficheChaineSVG(Chaines *C, char *nomInstance)
 {
 	CellChaine *chaine_curr;
 	CellPoint *point_curr;
+	double xmin, ymin, xmax, ymax;
+	xmin = DBL_MAX;
+	ymin = DBL_MAX;
+	xmax = -DBL_MAX;
+	ymax = -DBL_MAX;
+	double xnormalise;
+	double ynormalise;
+	double xnormalisesuiv;
+	double ynormalisesuiv;
 
 	SVGwriter *svg = (SVGwriter *)malloc(sizeof(SVGwriter));
 
 	/* initialise svg avec nomInstance pour nom du fichier html a creer
 		et avec une taille de 500x500 pixels */
-	SVGinit(svg, nomInstance, 500, 500);
-//	SVGlineRandColor(svg); /* couleur aleatoire pour les lignes */
-	SVGlineColor(svg, Black);
+	SVGinit(svg, nomInstance, 5000, 5000);
+	SVGlineRandColor(svg); /* couleur aleatoire pour les lignes */
+//	SVGlineColor(svg, Black);
 	SVGpointColor(svg, Red); /* fixe la couleur des points a rouge */
 
 	/* premiere chaine de la liste chainee de chaines de C */
 	chaine_curr = C -> chaines;
+
+	chaineCoordMinMax(C,&xmin,&ymin,&xmax,&ymax);
 
 	while (chaine_curr){
 		/* premier point de la liste chainee de points de chaine_curr */
@@ -261,12 +308,16 @@ void afficheChaineSVG(Chaines *C, char *nomInstance)
 
 		while (point_curr){
 			/* Ecrit point_curr dans le fichier */
-			SVGpoint(svg, point_curr -> x, point_curr -> y);
+			xnormalise = (point_curr -> x - xmin)*(5000)/(xmax-xmin);
+			ynormalise = (point_curr -> y - ymin)*(5000)/(ymax-ymin);
+			SVGpoint(svg,xnormalise,ynormalise);
 
 			/* si point_curr est suivi d'un autre point */
 			if (point_curr -> suiv){
 				/* relier les deux */
-				SVGline(svg, point_curr -> x, point_curr -> y, point_curr -> suiv -> x, point_curr -> suiv -> y);
+				xnormalisesuiv = (point_curr -> suiv -> x - xmin)*(5000)/(xmax-xmin);
+				ynormalisesuiv = ( point_curr -> suiv -> y - ymin)*(5000)/(ymax-ymin); 
+				SVGline(svg, xnormalise, ynormalise, xnormalisesuiv, ynormalisesuiv);
 			}
 			point_curr = point_curr -> suiv;
 		}

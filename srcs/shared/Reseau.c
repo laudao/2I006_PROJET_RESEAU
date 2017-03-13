@@ -1,4 +1,5 @@
 #include "Reseau.h"
+#include <float.h>
 
 Noeud *creerNoeud(Reseau *R, double x, double y)
 {
@@ -278,26 +279,64 @@ void afficheReseauSVG(Reseau *R, char *nomInstance)
 	CellNoeud *cellNoeudCurr;
 	Noeud *noeudCurr;
 	CellNoeud *voisin;
+	double xmin, ymin, xmax, ymax;
+	xmin = DBL_MAX;
+	ymin = DBL_MAX;
+	xmax = -DBL_MAX;
+	ymax = -DBL_MAX;
+	double xnormalise;
+	double ynormalise;
+	double xnormalisesuiv;
+	double ynormalisesuiv;
 
 	svg = (SVGwriter *)malloc(sizeof(SVGwriter));
 
 	/* initialise svg avec nomInstance pour nom du fichier html a creer 
 		 et avec une taille de 500x500 pixels */
 	SVGinit(svg, nomInstance, 500, 500);
-	SVGlineRandColor(svg); /* couleur aleatoire pour les lignes */
+	//SVGlineRandColor(svg); /* couleur aleatoire pour les lignes */
+	SVGlineColor(svg, Black);
 	SVGpointColor(svg, Red);  /* fixe la couleur des points a rouge */
 
 	cellNoeudCurr = R -> noeuds;
 
 	while (cellNoeudCurr){
 		noeudCurr = cellNoeudCurr -> nd;
-		SVGpoint(svg, noeudCurr -> x, noeudCurr -> y); /* ecrit noeudCurr dans le fichier */
+		
+		if (noeudCurr -> x < xmin){
+			xmin = noeudCurr -> x;
+		}
+			
+		if (noeudCurr -> y < ymin){
+			ymin = noeudCurr -> y;
+		}
+		
+		if (noeudCurr -> x > xmax){
+			xmax = noeudCurr -> x;
+		}
+			
+		if (noeudCurr -> y > ymax){
+			ymax = noeudCurr -> y;
+		}		
+		
+		cellNoeudCurr = cellNoeudCurr -> suiv;
+	}
+	
+	cellNoeudCurr = R -> noeuds;
+	
+	while (cellNoeudCurr){
+		noeudCurr = cellNoeudCurr -> nd;
+		xnormalise = (noeudCurr -> x - xmin)*(500)/(xmax-xmin);
+		ynormalise = (noeudCurr -> y - ymin)*(500)/(ymax-ymin);
+		SVGpoint(svg,xnormalise,ynormalise);
+
 		voisin = noeudCurr -> voisins;
 
 		while (voisin){
 			if (voisin -> nd -> num >= noeudCurr -> num){
-				SVGpoint(svg, voisin -> nd -> x, voisin -> nd -> y);
-				SVGline(svg, noeudCurr -> x, noeudCurr -> y, voisin -> nd -> x, voisin -> nd -> y);
+				xnormalisesuiv = (voisin -> nd -> x - xmin)*(500)/(xmax-xmin);
+				ynormalisesuiv = (voisin -> nd -> y - ymin)*(500)/(ymax-ymin); 
+				SVGline(svg, xnormalise, ynormalise, xnormalisesuiv, ynormalisesuiv);
 			}
 			voisin = voisin -> suiv;
 		}

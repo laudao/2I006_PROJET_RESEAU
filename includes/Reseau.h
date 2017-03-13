@@ -4,6 +4,7 @@
 #include "Chaine.h"
 #include "SVGwriter.h"
 
+
 typedef struct noeud Noeud;
 
 /* Liste chainee de noeuds (pour la liste des noeuds du reseau ET les listes des voisins de chaque noeud) */

@@ -1,6 +1,7 @@
 #ifndef __ARBRE_QUAT_H
 #define __ARBRE_QUAT_H
 #include "Reseau.h"
+#include <float.h>
 
 /* Arbre quaternaire contenant les noeuds du reseau */
 typedef struct arbreQuat{
