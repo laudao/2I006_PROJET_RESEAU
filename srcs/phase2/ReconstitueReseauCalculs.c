@@ -16,13 +16,17 @@ int main()
 	clock_t temps_final;
 	double temps_cpu;
 	int i;
-	char *tab_instances[] = {"Instances_cha/00022_ulysses.cha","Instances_cha/00100_USA-road-d-NY-1-100.cha", "Instances_cha/00150_ch.cha", "Instances_cha/07000_USA-road-d-NY.cha", "Instances_cha/10000_USA-road-d-NY.cha"};
+	char *tab_instances[] = {"Instances_cha/00014_burma.cha", "Instances_cha/00048_att.cha", "Instances_cha/00052_berlin.cha","Instances_cha/00076_eil.cha","Instances_cha/00100_USA-road-d-NY-1-100.cha","Instances_cha/00101_eil.cha","Instances_cha/00144_pr.cha","Instances_cha/00150_ch.cha",
+	"Instances_cha/00280_a.cha","Instances_cha/00417_fl.cha","Instances_cha/00493_d.cha",
+	"Instances_cha/00575_rat.cha","Instances_cha/00666_fr.cha","Instances_cha/00783_rat.cha",
+	"Instances_cha/01400_fl.cha","Instances_cha/02392_pr.cha","Instances_cha/03795_fl.cha", "Instances_cha/04461_fnl.cha","Instances_cha/05000_USA-road-d-NY.cha","Instances_cha/05934_rl.cha",
+	"Instances_cha/07000_USA-road-d-NY.cha","Instances_cha/07397_pla.cha","Instances_cha/08000_USA-road-d-NY.cha","Instances_cha/09000_USA-road-d-NY.cha","Instances_cha/10000_USA-road-d-NY.cha"};
 
 	f_temps_liste = fopen("Temps_liste", "w");
-	f_temps_hachage = fopen("Temps hachage", "w");
+	f_temps_hachage = fopen("Temps_hachage", "w");
 	f_temps_arbre = fopen("Temps_arbre", "w");
 	
-	for (i = 0; i < 5; i++){
+	for (i = 0; i < 25; i++){
 		nameFile = tab_instances[i];
 		fread = fopen(nameFile, "r");
 		
@@ -37,19 +41,19 @@ int main()
 		R = reconstitueReseauListe(instance);	
 		temps_final = clock();
 		temps_cpu = ((double)(temps_final - temps_initial))/CLOCKS_PER_SEC;
-		fprintf(f_temps_liste, "%f\n", temps_cpu);	
+		fprintf(f_temps_liste, "%d %f\n", R -> nbNoeuds, temps_cpu);	
 		
 		temps_initial = clock();
 		R = reconstitueReseauHachage(instance);
 		temps_final = clock();
 		temps_cpu = ((double)(temps_final - temps_initial))/CLOCKS_PER_SEC;
-		fprintf(f_temps_hachage, "%f\n", temps_cpu);
+		fprintf(f_temps_hachage, "%d %f\n", R -> nbNoeuds, temps_cpu);
 		
 		temps_initial = clock();
 		R = recreeReseauArbre(instance);
 		temps_final = clock();
 		temps_cpu = ((double)(temps_final - temps_initial))/CLOCKS_PER_SEC;
-		fprintf(f_temps_arbre, "%f\n", temps_cpu);
+		fprintf(f_temps_arbre, "%d %f\n", R -> nbNoeuds, temps_cpu);
 		fclose(fread);
 	}
 
