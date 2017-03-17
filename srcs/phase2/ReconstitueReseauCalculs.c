@@ -7,7 +7,9 @@ int main()
 {
 	char *nameFile;
 	FILE *fread;
-	FILE *f_temps_calcul;
+	FILE *f_temps_liste;
+	FILE *f_temps_hachage;
+	FILE *f_temps_arbre;
 	Chaines *instance;
 	Reseau *R;
 	clock_t temps_initial;
@@ -16,7 +18,9 @@ int main()
 	int i;
 	char *tab_instances[] = {"Instances_cha/00022_ulysses.cha","Instances_cha/00100_USA-road-d-NY-1-100.cha", "Instances_cha/00150_ch.cha", "Instances_cha/07000_USA-road-d-NY.cha", "Instances_cha/10000_USA-road-d-NY.cha"};
 
-	f_temps_calcul = fopen("Temps_de_calcul", "w");
+	f_temps_liste = fopen("Temps_liste", "w");
+	f_temps_hachage = fopen("Temps hachage", "w");
+	f_temps_arbre = fopen("Temps_arbre", "w");
 	
 	for (i = 0; i < 5; i++){
 		nameFile = tab_instances[i];
@@ -29,35 +33,28 @@ int main()
 	
 		
 		instance = lectureChaine(fread);
-		printf("Instance %s reconstitue\n", nameFile);
-		fprintf(f_temps_calcul, "%s\n", tab_instances[i]);
-		fprintf(f_temps_calcul, "Reconstitution avec liste chainee:\n");
 		temps_initial = clock();
 		R = reconstitueReseauListe(instance);	
 		temps_final = clock();
-		printf("Reseau liste %s reconstitue\n", nameFile);
 		temps_cpu = ((double)(temps_final - temps_initial))/CLOCKS_PER_SEC;
-		fprintf(f_temps_calcul, "Temps cpu: %f\n", temps_cpu);	
+		fprintf(f_temps_liste, "%f\n", temps_cpu);	
 		
-		fprintf(f_temps_calcul, "Reconstitution avec table de hachage:\n");
 		temps_initial = clock();
 		R = reconstitueReseauHachage(instance);
 		temps_final = clock();
-		printf("Reseau table hachage %s reconstitue\n", nameFile);
 		temps_cpu = ((double)(temps_final - temps_initial))/CLOCKS_PER_SEC;
-		fprintf(f_temps_calcul, "Temps cpu: %f\n", temps_cpu);
+		fprintf(f_temps_hachage, "%f\n", temps_cpu);
 		
-		fprintf(f_temps_calcul, "Reconstitution avec arbre quaternaire:\n");
 		temps_initial = clock();
 		R = recreeReseauArbre(instance);
 		temps_final = clock();
-		printf("Reseau arbre %s reconstitue\n", nameFile);
 		temps_cpu = ((double)(temps_final - temps_initial))/CLOCKS_PER_SEC;
-		fprintf(f_temps_calcul, "Temps cpu: %f\n", temps_cpu);
-		fprintf(f_temps_calcul, "\n");
+		fprintf(f_temps_arbre, "%f\n", temps_cpu);
 		fclose(fread);
 	}
 
-	fclose(f_temps_calcul);
+	fclose(f_temps_liste);
+	fclose(f_temps_hachage);
+	fclose(f_temps_arbre);
 	return 0;
 }
