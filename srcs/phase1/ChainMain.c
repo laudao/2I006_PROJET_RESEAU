@@ -24,7 +24,7 @@ int main(int argc, char **argv){
 
 	Chaines *instance = lectureChaine(f1);
 
-	f2 = fopen("Test.cha", "w");
+	f2 = fopen("Chaines.cha", "w");
 	ecrireChaineTxt(instance, f2);
 
 	longueur = longueurChaine(instance -> chaines);
@@ -32,9 +32,8 @@ int main(int argc, char **argv){
 	nbPoints = comptePointsTotal(instance);
 
 	printf("Longueur totale: %f\n", total);
-	printf("Longueur 1 : %f\n", longueur);
 	printf("Nombre total de points: %d\n", nbPoints);
 
-	afficheChaineSVG(instance, "TestSVG");
+	afficheChaineSVG(instance, "SVGChaines");
 	return 0;
 }
