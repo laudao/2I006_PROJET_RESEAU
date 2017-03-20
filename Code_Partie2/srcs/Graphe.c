@@ -164,6 +164,8 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 	return L;
 }
 
+
+
 void lecture_graphe(Graphe *G, FILE * f){
 
   char temp[101];
