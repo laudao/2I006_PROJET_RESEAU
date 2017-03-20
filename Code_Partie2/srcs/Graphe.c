@@ -7,7 +7,6 @@
 #include"Struct_Liste.h"
 
 
-
 void ajout_voisin(Graphe* G, int u, int v){
   Cellule_arete *pca;
   Arete *pa;
@@ -36,8 +35,133 @@ Arete* acces_arete(Graphe* G, int u, int v){
   while ( (coura!=NULL)&&(coura->a->u!=v)&&(coura->a->v!=v))
     coura=coura->suiv;
 
-  if (coura==NULL) return NULL;
-            else  return coura->a;
+  if (coura==NULL) 
+  	return NULL;
+  else  
+  	return coura->a;
+}
+
+int nbAretesMin_depuis_u(Graphe *G, int u, int v)
+{
+	Cellule_arrete *coura; /* arete courante */
+	int e1, e2; /* extremite de l'arete */
+	int *visite = (int*)malloc(G -> nbsom + 1* sizeof(int)); /* tableau de visites */
+	int i;
+	int nbAretesMin;
+	int verif;
+	S_File F;
+	Init_file(F);
+	nbAretesMin = 0;
+	coura = NULL;
+	e1 = 0;
+	e2 = 0;
+	verif = 0;
+	/* initialisation des visites a -1 */
+	for (i = 1; i <= G->nbsom; i++){
+		visit[i] = -1;
+	}	
+	
+	visit[u] = 0;
+	enfile(&F, u);
+	
+	/* tant que la file n'est pas vide */
+	while (!(estFileVide(&F) && (!verif)){ 
+		e1 = defile(&F);
+		coura = G -> t_som[e1] -> L_voisin; /* arete incidente a e1 */
+		
+		/* parcours des aretes */
+		while ((coura != NULL) && (!verif)){ 
+			e2 = coura -> a -> v; /* extremite de l'arete */
+			
+			/* si l'extremite de l'arete est la meme */
+			if (e2 == e1){
+				e2 = coura -> a -> u; /* on prend l'autre extremite */
+			}
+			if (visit[e2] == -1){ /* sommet non visite */
+				visit[e2] = visit[e1] + 1;
+				
+				if (e2 == v){ /* c'est le sommet qu'on cherche*/
+					verif = 1;
+				}
+				else{
+					enfile(&F, e2);
+				}
+			}
+			coura = coura -> suiv;
+		}
+	}
+	
+	return nbAretesMin;
+}
+
+ListeEntier chemin_u_v(Graphe *G, int u, int v)
+{
+	Cellule_arrete *coura; /* arete courante */
+	int e1, e2; /* extremite de l'arete */
+	int *visite = (int*)malloc(G -> nbsom + 1 * sizeof(int)); /* tableau de visites */
+	int i;
+	int nbAretesMin;
+	int verif;
+	int *pere = (int*)malloc(G -> nbsom + 1 * sizeof(int)); /* pour indiquer qui est le pere de qui dans arbo */
+	S_File F;
+	ListeEntier L;
+	Init_Liste(&L);
+	
+	Init_file(F);
+	nbAretesMin = 0;
+	coura = NULL;
+	e1 = 0;
+	e2 = 0;
+	verif = 0;
+	
+	/* initialisation des visites a -1 */
+	for (i = 1; i <= G->nbsom; i++){
+		visit[i] = -1;
+		pere[i] = 0;
+	}	
+	
+	visit[u] = 0;
+	enfile(&F, u);
+	
+	/* tant que la file n'est pas vide */
+	while (!(estFileVide(&F) && (!verif)){ 
+		e1 = defile(&F);
+		coura = G -> t_som[e1] -> L_voisin; /* arete incidente a e1 */
+		
+		/* parcours des aretes */
+		while ((coura != NULL) && (!verif)){ 
+			e2 = coura -> a -> v; /* extremite de l'arete */
+			
+			/* si l'extremite de l'arete est la meme */
+			if (e2 == e1){
+				e2 = coura -> a -> u; /* on prend l'autre extremite */
+			}
+			
+			if (e2 == v){ /* c'est le sommet qu'on cherche*/
+					verif = 1;
+			}
+				
+			if (visit[e2] == -1){ /* sommet non visite */
+				visit[e2] = visit[e1] + 1;
+				pere[e2] = e1; /* le pere de e2 dans l'arborescence de u est e1*/
+				enfile(&F, e2); /* on doit visiter e2*/
+			}
+			coura = coura -> suiv;
+		}
+	}
+	
+	if (!verif){ /* v n'est pas dans le graphe */
+		return NULL;
+	}
+	else{
+		while (v != u){ /* on remonte l'arborescence jusqu'a u */
+			ajoute_en_tete(&L, pere[v]); /* on ajoute le pere de chaque sommet dans la liste */
+			v = pere[v];
+		}
+		ajoute_en_tete_(&L, u); /* ajout de u a la fin*/
+	}
+	
+	return L;
 }
 
 void lecture_graphe(Graphe *G, FILE * f){

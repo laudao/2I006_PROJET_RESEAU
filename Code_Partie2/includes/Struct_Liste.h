@@ -10,10 +10,10 @@ typedef struct cell_entier{
 
 typedef Cell_entier * ListeEntier;
 
-/* Initialisation d une file */
+/* Initialisation d une liste */
 void Init_Liste(ListeEntier *L);
 
-/* Teste si la file est vide */
+/* Teste si la liste est vide */
 int estLileVide(ListeEntier *L);
 
 /* Ajoute un element don`e en tete de liste */
