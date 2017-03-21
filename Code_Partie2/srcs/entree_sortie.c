@@ -1,5 +1,5 @@
 #include "entree_sortie.h"
-
+#include <ctype.h>
 
 /*LIT LE PROCHAIN CARACTERE NON VIDE */
 char ReadChar(FILE *f){

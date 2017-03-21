@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include "Struct_Liste.h"
+#include "Struct_File.h"
 
 typedef struct{
   int u,v;        /* Numeros des sommets extremité */
@@ -60,9 +61,13 @@ void ajout_voisin(Graphe* G, int u, int v);
    et NULL sinon */
 Arete* acces_arete(Graphe* G, int u, int v);
 
+int nbAretesMin_depuis_u(Graphe *G, int u, int v);
+
+ListeEntier chemin_u_v(Graphe *G, int u, int v);
+
 void lecture_graphe(Graphe *G, FILE * f);
 
-void affichageGrapheSVG(Graphe *G, char* nomInstance);
+void afficheGrapheSVG(Graphe *G, char* nomInstance);
 
 
 

@@ -6,21 +6,25 @@
 #include"entree_sortie.h"
 #include"Struct_Liste.h"
 
-
+/* ajout de l'arete (u,v) dans le graphe */
 void ajout_voisin(Graphe* G, int u, int v){
   Cellule_arete *pca;
   Arete *pa;
 
+	/* creation de l'arete reliant u a v */
   pa=(Arete *) malloc(sizeof(Arete));
   pa->u=u;
   pa->v=v;
   pa->longueur=sqrt( (G->T_som[u]->x - G->T_som[v]->x)*(G->T_som[u]->x - G->T_som[v]->x) + (G->T_som[u]->y - G->T_som[v]->y)*(G->T_som[u]->y - G->T_som[v]->y));
 
+	/* creation d'une cellule pointant sur cette arete */
   pca=(Cellule_arete*) malloc(sizeof(Cellule_arete));
   pca->a=pa;
+  /* ajout de cette cellule dans la liste des voisins de u*/
   pca->suiv=G->T_som[u]->L_voisin;
   G->T_som[u]->L_voisin=pca;
 
+	/* idem pour v */
   pca=(Cellule_arete*) malloc(sizeof(Cellule_arete));
   pca->a=pa;
   pca->suiv=G->T_som[v]->L_voisin;
@@ -28,6 +32,7 @@ void ajout_voisin(Graphe* G, int u, int v){
 
 }
 
+/* determine si u et v sont voisins ou non */
 Arete* acces_arete(Graphe* G, int u, int v){
   Cellule_arete *coura;
 
@@ -41,78 +46,83 @@ Arete* acces_arete(Graphe* G, int u, int v){
   	return coura->a;
 }
 
+/* retourne le plus petit nombre d'aretes d'un chemin entre deux sommets u et v */
 int nbAretesMin_depuis_u(Graphe *G, int u, int v)
 {
-	Cellule_arrete *coura; /* arete courante */
+	Cellule_arete *coura; /* arete courante */
 	int e1, e2; /* extremite de l'arete */
-	int *visite = (int*)malloc(G -> nbsom + 1* sizeof(int)); /* tableau de visites */
+	int *visit = (int*)malloc((G -> nbsom) + 1 * sizeof(int)); /* tableau de visites */
 	int i;
 	int nbAretesMin;
-	int verif;
-	S_File F;
-	Init_file(F);
-	nbAretesMin = 0;
+	S_file F; /* la file pour stocker les noeuds a visiter */
+
+	nbAretesMin = -1;
+	Init_file(&F);
 	coura = NULL;
 	e1 = 0;
 	e2 = 0;
-	verif = 0;
+
 	/* initialisation des visites a -1 */
 	for (i = 1; i <= G->nbsom; i++){
 		visit[i] = -1;
 	}	
-	
+
 	visit[u] = 0;
 	enfile(&F, u);
 	
-	/* tant que la file n'est pas vide */
-	while (!(estFileVide(&F) && (!verif)){ 
-		e1 = defile(&F);
-		coura = G -> t_som[e1] -> L_voisin; /* arete incidente a e1 */
+	/* tant que la file n'est pas vide et qu'on a pas trouve le sommet v*/
+	while (!(estFileVide(&F)) && (e2 != v)){ 
+		e1 = defile(&F); /* e1 est le sommet a visiter qu'on vient de defiler */
+		coura = G -> T_som[e1] -> L_voisin; /* arete incidente a e1 */
 		
-		/* parcours des aretes */
-		while ((coura != NULL) && (!verif)){ 
+		/* parcours des aretes incidentes a e1 */
+		while ((coura != NULL) && (e2 != v)){ 
 			e2 = coura -> a -> v; /* extremite de l'arete */
 			
 			/* si l'extremite de l'arete est la meme */
 			if (e2 == e1){
 				e2 = coura -> a -> u; /* on prend l'autre extremite */
 			}
-			if (visit[e2] == -1){ /* sommet non visite */
-				visit[e2] = visit[e1] + 1;
+
+			/* e2 n'a pas encore ete visite */
+			if (visit[e2] == -1){
+				visit[e2] = visit[e1] + 1; /* on incremente de 1 la longueur du chemin pour e2 */
 				
-				if (e2 == v){ /* c'est le sommet qu'on cherche*/
-					verif = 1;
-				}
-				else{
-					enfile(&F, e2);
+				if (e2 != v){ /* e2 n'est pas le sommet recherche */
+					enfile(&F, e2); /* on enfile e2 */
 				}
 			}
 			coura = coura -> suiv;
 		}
 	}
 	
-	return nbAretesMin;
+	if (e2 == v){
+		nbAretesMin = visit[v];
+		free(visit);
+		return nbAretesMin;
+	}
+	else{
+		free(visit);
+		return -1;
+	}
 }
 
+/* retourne une liste d'entiers correspondant au plus court chemin reliant u a v */
 ListeEntier chemin_u_v(Graphe *G, int u, int v)
 {
-	Cellule_arrete *coura; /* arete courante */
+	Cellule_arete *coura; /* arete courante */
 	int e1, e2; /* extremite de l'arete */
-	int *visite = (int*)malloc(G -> nbsom + 1 * sizeof(int)); /* tableau de visites */
+	int *visit = (int*)malloc(G -> nbsom + 1 * sizeof(int)); /* tableau de visites */
 	int i;
-	int nbAretesMin;
-	int verif;
-	int *pere = (int*)malloc(G -> nbsom + 1 * sizeof(int)); /* pour indiquer qui est le pere de qui dans arbo */
-	S_File F;
-	ListeEntier L;
+	int *pere = (int*)malloc(G -> nbsom + 1 * sizeof(int)); /* tableau qui indique qui est le pere de qui dans arbo */
+	S_file F;
+	ListeEntier L; /* la liste des sommets liant u a v */
 	Init_Liste(&L);
 	
-	Init_file(F);
-	nbAretesMin = 0;
+	Init_file(&F);
 	coura = NULL;
 	e1 = 0;
 	e2 = 0;
-	verif = 0;
 	
 	/* initialisation des visites a -1 */
 	for (i = 1; i <= G->nbsom; i++){
@@ -123,13 +133,13 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 	visit[u] = 0;
 	enfile(&F, u);
 	
-	/* tant que la file n'est pas vide */
-	while (!(estFileVide(&F) && (!verif)){ 
-		e1 = defile(&F);
-		coura = G -> t_som[e1] -> L_voisin; /* arete incidente a e1 */
+	/* tant que la file n'est pas vide et que v n'a pas ete trouve */
+	while (!(estFileVide(&F)) && (e2 != v)){ 
+		e1 = defile(&F); /* le sommet a visiter */
+		coura = G -> T_som[e1] -> L_voisin; /* arete incidente a e1 */
 		
 		/* parcours des aretes */
-		while ((coura != NULL) && (!verif)){ 
+		while ((coura != NULL) && (e2 != v)){ 
 			e2 = coura -> a -> v; /* extremite de l'arete */
 			
 			/* si l'extremite de l'arete est la meme */
@@ -137,20 +147,18 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 				e2 = coura -> a -> u; /* on prend l'autre extremite */
 			}
 			
-			if (e2 == v){ /* c'est le sommet qu'on cherche*/
-					verif = 1;
-			}
-				
-			if (visit[e2] == -1){ /* sommet non visite */
-				visit[e2] = visit[e1] + 1;
-				pere[e2] = e1; /* le pere de e2 dans l'arborescence de u est e1*/
-				enfile(&F, e2); /* on doit visiter e2*/
+			if (e2 != v){
+				if (visit[e2] == -1){ /* sommet non visite */
+					visit[e2] = visit[e1] + 1; /* mise a jour de la longueur du chemin liant u a e2 */
+					pere[e2] = e1; /* le pere de e2 dans l'arborescence des chemins de  u est e1*/
+					enfile(&F, e2); /* on doit visiter e2*/
+				}
 			}
 			coura = coura -> suiv;
 		}
 	}
 	
-	if (!verif){ /* v n'est pas dans le graphe */
+	if (e2 != v){ /* v n'est pas dans le graphe */
 		return NULL;
 	}
 	else{
@@ -158,7 +166,7 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 			ajoute_en_tete(&L, pere[v]); /* on ajoute le pere de chaque sommet dans la liste */
 			v = pere[v];
 		}
-		ajoute_en_tete_(&L, u); /* ajout de u a la fin*/
+		ajoute_en_tete(&L, u); /* ajout de u a la fin*/
 	}
 	
 	return L;

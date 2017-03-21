@@ -8,6 +8,9 @@ int main(int argc,char**argv){
 
   char filename[104],filenameres[104],filenamencha[104];;
   int chmeth;
+	Graphe G;
+	FILE *f;
+	int nbAr;
 
   if(argc!=3){
     printf("usage: %s <file> <numeromethod>\n",argv[0]);
@@ -22,17 +25,17 @@ int main(int argc,char**argv){
   strcat(filenameres,".res");
   strcat(filenamencha,".ncha");
 
-  FILE *f=fopen(filenameres,"r");
+  f = fopen(filenameres,"r");
 
   if (f==NULL){
     printf("Probleme lecture du fichier %s\n",filenameres);
     exit(1);
   }
 
-  Graphe G;
-
   lecture_graphe(&G,f);
-
+	printf("Nombre de sommet: %d\n", G.nbsom);
+	nbAr = nbAretesMin_depuis_u(&G, 5, 11);
+	printf("Nombre d'aretes reliant 5 a 11: %d\n", nbAr);
   fclose(f);
 
   afficheGrapheSVG(&G,filename);

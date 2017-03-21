@@ -1,29 +1,42 @@
+MAINGRAPHE= MainGraphe
+
+CC= gcc
+CFLAGS= -Werror -Wextra -Wall -fsanitize=address
+
+SRC_MAIN_GRAPHE= MainGraphe.c
+SRC_SHARED= entree_sortie.c SVGwriter.c Graphe.c Struct_File.c Struct_Liste.c evaluation_NChaines.c
+
+OBJ_MAIN_GRAPHE= $(SRC_MAIN_GRAPHE:.c=.o)
+OBJ_SHARED= $(SRC_SHARED:.c=.o)
+
+INC= -I includes/
+
+VPATH= srcs
+
 all: MainGraphe
 
-entree_sortie.o: entree_sortie.c entree_sortie.h
-	gcc -c entree_sortie.c
+### Executables
 
-SVGwriter.o: SVGwriter.c SVGwriter.h
-	gcc -c SVGwriter.c
+$(MAINGRAPHE): $(OBJ_MAIN_GRAPHE) $(OBJ_SHARED)
+	@$(CC) $(CFLAGS) -o $@ $^ $(INC) -lm
+	@echo "Linking [$^]"
 
-MainGraphe: MainGraphe.o Graphe.o entree_sortie.o SVGwriter.o Struct_File.o Struct_Liste.o evaluation_NChaines.o
-	gcc -Wall -O -o MainGraphe MainGraphe.o Graphe.o entree_sortie.o SVGwriter.o Struct_File.o Struct_Liste.o evaluation_NChaines.o -lm 
+### Obj files
 
-MainGraphe.o: MainGraphe.c Graphe.h
-	gcc -c MainGraphe.c
+$(OBJ_MAIN_GRAPHE): $(SRC_MAIN_GRAPHE)
+	@$(CC) $(CFLAGS) -c $^ $(INC)
+	@echo "Compiling [$^]"
 
-Graphe.o: Graphe.c Graphe.h SVGwriter.h Struct_File.h Struct_Liste.h
-	gcc -c Graphe.c
+$(OBJ_SHARED): $(SRC_SHARED)
+	@$(CC) $(CFLAGS) -c $^ $(INC)
+	@echo "Compiling [$^]"
 
-Struct_File.o: Struct_File.c Struct_File.h
-	gcc -c Struct_File.c
+clean:
+	rm -fr $(OBJ_MAIN_GRAPHE) $(OBJ_SHARED)
 
-Struct_Liste.o: Struct_Liste.c Struct_Liste.h
-	gcc -c Struct_Liste.c
+fclean: clean
+	rm $(MAIN_GRAPHE)
 
-evaluation_NChaines.o: evaluation_NChaines.c evaluation_NChaines.h
-	gcc -c evaluation_NChaines.c
+re: fclean all
 
-
-clean: 
-	rm -fr MainGraphe  *.o
+.PHONY: clean fclean re
