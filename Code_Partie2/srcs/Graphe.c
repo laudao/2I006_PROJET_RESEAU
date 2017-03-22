@@ -162,6 +162,7 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 		return NULL;
 	}
 	else{
+		ajoute_en_tete(&L, v);
 		while (v != u){ /* on remonte l'arborescence jusqu'a u */
 			ajoute_en_tete(&L, pere[v]); /* on ajoute le pere de chaque sommet dans la liste */
 			v = pere[v];
@@ -172,7 +173,37 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 	return L;
 }
 
+void chaines_commodites(Graphe *G,ListeEntier* L ){
 
+	int i;
+	
+	for(i=0;i<nbcommod;i++){
+		L[i]=chemin_u_v(G,G->T_commod[i].e1, G->T_commod[i].e1);
+	}
+}
+		 
+void ecrit_chaines_commodites(Graphe *G,char* filename){
+	FILE *f=fopen(filename);
+	ListeEntier* tabchaines=(ListeEntier*)malloc(G->nbcommod*sizeof(ListeEntier));
+	int i;
+	ListeEntier cour;
+	
+	if(f==NULL){
+		fprintf(stderr,"Probleme lors de l'ouverture du fichier %s\n",filename);
+	}
+	else{
+		chaines_commodites(G,tabchaines);
+		
+		for(i=0;i<G->nbcommod;i++){
+			cour=tabchaines[i];
+			while(cour!=NULL){
+				fprintf(f,"%d ",cour->u);
+				cour=cour->suiv;
+			}
+			fprintf(f,"-1\n");
+		}
+	}
+}
 
 void lecture_graphe(Graphe *G, FILE * f){
 
