@@ -6,7 +6,6 @@
 #include"entree_sortie.h"
 #include"Struct_Liste.h"
 
-/* ajout de l'arete (u,v) dans le graphe */
 void ajout_voisin(Graphe* G, int u, int v){
   Cellule_arete *pca;
   Arete *pa;
@@ -32,7 +31,6 @@ void ajout_voisin(Graphe* G, int u, int v){
 
 }
 
-/* determine si u et v sont voisins ou non */
 Arete* acces_arete(Graphe* G, int u, int v){
   Cellule_arete *coura;
 
@@ -46,12 +44,11 @@ Arete* acces_arete(Graphe* G, int u, int v){
   	return coura->a;
 }
 
-/* retourne le plus petit nombre d'aretes d'un chemin entre deux sommets u et v */
 int nbAretesMin_depuis_u(Graphe *G, int u, int v)
 {
 	Cellule_arete *coura; /* arete courante */
 	int e1, e2; /* extremite de l'arete */
-	int *visit = (int*)malloc((G -> nbsom) + 1 * sizeof(int)); /* tableau de visites */
+	int *visit = (int*)malloc(((G -> nbsom) + 1) * sizeof(int)); /* tableau de visites */
 	int i;
 	int nbAretesMin;
 	S_file F; /* la file pour stocker les noeuds a visiter */
@@ -107,14 +104,13 @@ int nbAretesMin_depuis_u(Graphe *G, int u, int v)
 	}
 }
 
-/* retourne une liste d'entiers correspondant au plus court chemin reliant u a v */
 ListeEntier chemin_u_v(Graphe *G, int u, int v)
 {
 	Cellule_arete *coura; /* arete courante */
 	int e1, e2; /* extremite de l'arete */
-	int *visit = (int*)malloc(G -> nbsom + 1 * sizeof(int)); /* tableau de visites */
+	int *visit = (int*)malloc(((G -> nbsom) + 1) * sizeof(int)); /* tableau de visites */
 	int i;
-	int *pere = (int*)malloc(G -> nbsom + 1 * sizeof(int)); /* tableau qui indique qui est le pere de qui dans arbo */
+	int *pere = (int*)malloc(((G -> nbsom) + 1) * sizeof(int)); /* tableau qui indique qui est le pere de qui dans arbo */
 	S_file F;
 	ListeEntier L; /* la liste des sommets liant u a v */
 	Init_Liste(&L);
@@ -147,62 +143,74 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 				e2 = coura -> a -> u; /* on prend l'autre extremite */
 			}
 			
-			if (e2 != v){
-				if (visit[e2] == -1){ /* sommet non visite */
-					visit[e2] = visit[e1] + 1; /* mise a jour de la longueur du chemin liant u a e2 */
-					pere[e2] = e1; /* le pere de e2 dans l'arborescence des chemins de  u est e1*/
-					enfile(&F, e2); /* on doit visiter e2*/
-				}
+			if (visit[e2] == -1){ /* sommet non visite */
+				visit[e2] = visit[e1] + 1; /* mise a jour de la longueur du chemin liant u a e2 */
+				pere[e2] = e1; /* le pere de e2 dans l'arborescence des chemins de  u est e1*/
+				enfile(&F, e2); /* on doit visiter e2*/
 			}
 			coura = coura -> suiv;
 		}
 	}
 	
 	if (e2 != v){ /* v n'est pas dans le graphe */
+		free(visit);
+		free(pere);
 		return NULL;
 	}
 	else{
+		int i;
+		for (i = 1; i <= G->nbsom; i++){
+			printf("pere[%d] = %d\n", i, pere[i]);
+		}	
+
 		ajoute_en_tete(&L, v);
+		printf("ajout de %d\n", v);
 		while (v != u){ /* on remonte l'arborescence jusqu'a u */
 			ajoute_en_tete(&L, pere[v]); /* on ajoute le pere de chaque sommet dans la liste */
+			printf("ajout de %d\n", pere[v]);
 			v = pere[v];
 		}
-		ajoute_en_tete(&L, u); /* ajout de u a la fin*/
+		
+		return L;
 	}
 	
-	return L;
 }
 
-void chaines_commodites(Graphe *G,ListeEntier* L ){
-
+void chaines_commodites(Graphe *G, ListeEntier* L ){
 	int i;
 	
-	for(i=0;i<nbcommod;i++){
-		L[i]=chemin_u_v(G,G->T_commod[i].e1, G->T_commod[i].e1);
+	/* pour chaque commodite du graphe */
+	for(i=0; i < G->nbcommod; i++){
+		printf("pour la commodite %d -> %d\n", G->T_commod[i].e1, G->T_commod[i].e2);
+		/* on stocke dans L[i] le chemin reliant une extremite a l'autre */
+		L[i] = chemin_u_v(G,G->T_commod[i].e1, G->T_commod[i].e2);
 	}
 }
 		 
 void ecrit_chaines_commodites(Graphe *G,char* filename){
-	FILE *f=fopen(filename);
-	ListeEntier* tabchaines=(ListeEntier*)malloc(G->nbcommod*sizeof(ListeEntier));
+	FILE *f = fopen(filename, "w");
+	/* tableau de liste d'entiers pour stocker les chemins */
+	ListeEntier* tabchaines = (ListeEntier*)malloc((G->nbcommod)*sizeof(ListeEntier));
 	int i;
 	ListeEntier cour;
 	
-	if(f==NULL){
-		fprintf(stderr,"Probleme lors de l'ouverture du fichier %s\n",filename);
+	if (f == NULL){
+		fprintf(stderr,"Probleme lors de l'ouverture du fichier %s\n", filename);
 	}
 	else{
-		chaines_commodites(G,tabchaines);
+		chaines_commodites(G, tabchaines); /* tabchaines va contenir le chemin pour chaque commodite*/
 		
-		for(i=0;i<G->nbcommod;i++){
-			cour=tabchaines[i];
-			while(cour!=NULL){
-				fprintf(f,"%d ",cour->u);
-				cour=cour->suiv;
+		/* on parcourt chaque chemin pour chaque commodite */
+		for(i=0; i < G->nbcommod; i++){
+			cour = tabchaines[i];
+			while(cour != NULL){
+				fprintf(f, "%d ", cour->u);
+				cour = cour->suiv;
 			}
 			fprintf(f,"-1\n");
 		}
 	}
+	fclose(f);
 }
 
 void lecture_graphe(Graphe *G, FILE * f){

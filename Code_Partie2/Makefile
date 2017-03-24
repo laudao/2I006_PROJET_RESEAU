@@ -32,7 +32,7 @@ $(OBJ_SHARED): $(SRC_SHARED)
 	@echo "Compiling [$^]"
 
 clean:
-	rm -fr $(OBJ_MAIN_GRAPHE) $(OBJ_SHARED)
+	rm $(OBJ_MAIN_GRAPHE) $(OBJ_SHARED)
 
 fclean: clean
 	rm $(MAIN_GRAPHE)

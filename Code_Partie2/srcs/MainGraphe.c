@@ -36,7 +36,10 @@ int main(int argc,char**argv){
 	printf("Nombre de sommet: %d\n", G.nbsom);
 	nbAr = nbAretesMin_depuis_u(&G, 5, 11);
 	printf("Nombre d'aretes reliant 5 a 11: %d\n", nbAr);
-  fclose(f);
+	ecrit_chaines_commodites(&G, filenamencha);
+
+	
+	fclose(f);
 
   afficheGrapheSVG(&G,filename);
 
