@@ -15,7 +15,7 @@ void ajout_voisin(Graphe* G, int u, int v){
   pa->u=u;
   pa->v=v;
   pa->longueur=sqrt( (G->T_som[u]->x - G->T_som[v]->x)*(G->T_som[u]->x - G->T_som[v]->x) + (G->T_som[u]->y - G->T_som[v]->y)*(G->T_som[u]->y - G->T_som[v]->y));
-
+	printf("(%d, %d) de longueur %f\n", u, v, pa->longueur);
 	/* creation d'une cellule pointant sur cette arete */
   pca=(Cellule_arete*) malloc(sizeof(Cellule_arete));
   pca->a=pa;
@@ -158,16 +158,9 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 		return NULL;
 	}
 	else{
-		int i;
-		for (i = 1; i <= G->nbsom; i++){
-			printf("pere[%d] = %d\n", i, pere[i]);
-		}	
-
 		ajoute_en_tete(&L, v);
-		printf("ajout de %d\n", v);
 		while (v != u){ /* on remonte l'arborescence jusqu'a u */
 			ajoute_en_tete(&L, pere[v]); /* on ajoute le pere de chaque sommet dans la liste */
-			printf("ajout de %d\n", pere[v]);
 			v = pere[v];
 		}
 		
@@ -181,7 +174,6 @@ void chaines_commodites(Graphe *G, ListeEntier* L ){
 	
 	/* pour chaque commodite du graphe */
 	for(i=0; i < G->nbcommod; i++){
-		printf("pour la commodite %d -> %d\n", G->T_commod[i].e1, G->T_commod[i].e2);
 		/* on stocke dans L[i] le chemin reliant une extremite a l'autre */
 		L[i] = chemin_u_v(G,G->T_commod[i].e1, G->T_commod[i].e2);
 	}
@@ -211,6 +203,66 @@ void ecrit_chaines_commodites(Graphe *G,char* filename){
 		}
 	}
 	fclose(f);
+}
+
+double longueur_totale_chemins(Graphe *G, int r)
+{
+	Cellule_arete *coura; /* arete courante */
+	int u, v; /* extremite de l'arete */
+	int *visit = (int*)malloc(((G -> nbsom) + 1) * sizeof(int)); /* tableau de visites */
+	int ar_visit[G->nbsom+1][G->nbsom+1];
+	int i, j;
+	double longueur_totale;
+	S_file F;
+	
+	Init_file(&F);
+	coura = NULL;
+	u= 0;
+	v = 0;
+	longueur_totale = 0;
+
+	/* initialisation des visites a -1 */
+	for (i = 1; i <= G->nbsom; i++){
+		visit[i] = 0;
+		for (j = 1; j <= G->nbsom; j++){
+			ar_visit[i][j] = 0; /* 0 pour non visite */
+		}
+	}	
+	
+	enfile(&F, r);
+	visit[r] = 1;
+
+	/* tant que la file n'est pas vide et que v n'a pas ete trouve */
+	while (!(estFileVide(&F))){ 
+		u = defile(&F); /* le sommet a visiter */
+		printf("sommet %d\n", u);
+		coura = G -> T_som[u] -> L_voisin; /* arete incidente a u */
+
+		/* parcours des aretes */
+		while (coura != NULL){ 
+			v = coura -> a -> v; /* extremite de l'arete */
+			/* si l'extremite de l'arete est la meme */
+			if (v == u){
+				v = coura -> a -> u; /* on prend l'autre extremite */
+			}
+			
+			if (ar_visit[u][v] == 0 && ar_visit[v][u] == 0){ /* arete non visitee */
+				printf("on ajoute (%d, %d) : %f\n", u, v, coura -> a -> longueur);
+				longueur_totale += coura -> a -> longueur;
+				ar_visit[u][v] = 1;
+				
+				if (visit[v] == 0){
+					visit[v] = 1;
+					printf("on enfile %d\n", v);
+					enfile(&F, v); /* on doit visiter v*/
+				}
+			}
+			coura = coura -> suiv;
+		}
+
+	}
+	
+	return longueur_totale;
 }
 
 void lecture_graphe(Graphe *G, FILE * f){

@@ -11,6 +11,7 @@ int main(int argc,char**argv){
 	Graphe G;
 	FILE *f;
 	int nbAr;
+	double longueur;
 
   if(argc!=3){
     printf("usage: %s <file> <numeromethod>\n",argv[0]);
@@ -37,8 +38,9 @@ int main(int argc,char**argv){
 	nbAr = nbAretesMin_depuis_u(&G, 5, 11);
 	printf("Nombre d'aretes reliant 5 a 11: %d\n", nbAr);
 	ecrit_chaines_commodites(&G, filenamencha);
-
 	
+	longueur = longueur_totale_chemins(&G, 5);
+	printf("longueur totale: %f\n", longueur);
 	fclose(f);
 
   afficheGrapheSVG(&G,filename);
