@@ -73,6 +73,10 @@ void chaines_commodies(Graphe *G, ListeEntier *L);
 /* ecrit les chaines reliant les extremites de chaque commodite dans un fichier .ncha */
 void ecrit_chaines_commodites(Graphe *G, char *filename);
 
+/* calcule le nombre maximal de chaines qui passe par la meme arete */
+void evaluation_gamma(Graphe *G);
+
+/* calcule la longueur totale des chemins obtenus en distance euclidienne des aretes */
 double longueur_totale_chemins(Graphe *G, int r);
 
 void lecture_graphe(Graphe *G, FILE * f);
