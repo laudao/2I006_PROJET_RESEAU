@@ -4,7 +4,7 @@ CC= gcc
 CFLAGS= -Wextra -Wall -fsanitize=address
 
 SRC_MAIN_GRAPHE= MainGraphe.c
-SRC_SHARED= entree_sortie.c SVGwriter.c Graphe.c Struct_File.c Struct_Liste.c evaluation_NChaines.c
+SRC_SHARED= entree_sortie.c SVGwriter.c Graphe.c Struct_File.c Struct_Liste.c evaluation_NChaines.c Tas2Clefs.c
 
 OBJ_MAIN_GRAPHE= $(SRC_MAIN_GRAPHE:.c=.o)
 OBJ_SHARED= $(SRC_SHARED:.c=.o)

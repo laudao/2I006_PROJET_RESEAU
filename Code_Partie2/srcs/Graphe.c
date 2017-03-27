@@ -5,6 +5,7 @@
 #include"SVGwriter.h"
 #include"entree_sortie.h"
 #include"Struct_Liste.h"
+#include <limits.h>
 
 void ajout_voisin(Graphe* G, int u, int v){
   Cellule_arete *pca;
@@ -205,7 +206,7 @@ void ecrit_chaines_commodites(Graphe *G,char* filename){
 	fclose(f);
 }
 
-void evaluation_gamma(Graphe *G)
+int evaluation_gamma(Graphe *G)
 {
 	ListeEntier *tabchaines = (ListeEntier*)malloc((G->nbcommod)*sizeof(ListeEntier));
 	int i;
@@ -242,6 +243,7 @@ void evaluation_gamma(Graphe *G)
 	}
 
 	G->gamma = gamma;
+	return gamma;
 }
 
 double longueur_totale_chemins(Graphe *G, int r)
@@ -298,6 +300,75 @@ double longueur_totale_chemins(Graphe *G, int r)
 	}
 	
 	return longueur_totale;
+}
+
+void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s){
+	int i;
+	Cellule_arete *coura = G->T_som[s]->L_voisin;
+	
+	while (coura != NULL){ /* parcours des voisins */
+		i = coura->a->v;
+		
+		if (i == s) i = coura->a->u;
+		
+		/* si le sommet n'a pas ete visite et qu'on a trouve un chemin plus interessant pour y acceder */
+		if ((marque[i] == 0) && (lambda[i] > lambda[s] + coura->a->longueur)){
+			lambda[i] = lambda[s] + coura->a->longueur;
+			pred[i] = s;
+			insert(bordure, i, lambda[i]); /* insertion dans la bordure */
+		}
+		
+		coura = coura->suiv;
+	}
+}
+
+int *plus_courts_chemins(Graphe *G, int r, int u)
+{
+	Tas2Clefs bordure;
+	/* tableau de liste d'entiers pour stocker le plus court chemin de r aux autres sommets*/
+	ListeEntier *L = (ListeEntier*)malloc((G->nbsom+1)*sizeof(ListeEntier));
+	/* tableau des valeurs des plus courts chemins de racine r*/
+	int *lambda = (int*)malloc(sizeof(int)*(G->nbsom+1)); 
+	/* tableau des predecesseurs dans l'arborescence des plus courts chemins de racine r*/
+	int *pred = (int*)malloc(sizeof(int)*(G->nbsom+1));
+	int *marque = (int*)malloc(sizeof(int)*(G->nbsom+1)); /* indique si le sommet a ete visite ou non*/
+	int i;
+	int s;
+	
+	init(&bordure, G->nbsom); 
+	
+	for (i=1; i<=G->nbsom; i++){
+		pred[i] = -1;
+		marque[i] = 0;
+		Init_Liste(&(L[i]));
+	}
+	
+	insert(&bordure, r, 0);
+	
+	while ((bordure.n != 0) && (s != u)){ /* tant que la bordure n'est pas vide */
+		s = supprMin(&bordure); /* on enleve l'element de plus courte distance de r */
+		marque[s] = 1;
+		if (s != u){
+			maj_bordure(G, pred, marque, lambda, &bordure, s);
+		}
+	}
+	
+	
+	/* a mettre dans une fonction a part entiere */
+//	for (i=1; i<G->nbsom; i++){
+//		s=i;
+//		ajoute_en_tete(&L[s], s);
+//		while (s != r){ /* on remonte l'arborescence jusqu'a u */
+//			ajoute_en_tete(&L[i], pred[s]); /* on ajoute le pere de chaque sommet dans la liste */
+//			s = pred[s];
+//		}
+		
+//	}
+	
+	free(lambda);
+
+	free(marque);
+	return pred;
 }
 
 void lecture_graphe(Graphe *G, FILE * f){
@@ -397,5 +468,7 @@ void afficheGrapheSVG(Graphe *G, char* nomInstance){
   SVGfinalize(&svg);
 
 }
+
+
 
 

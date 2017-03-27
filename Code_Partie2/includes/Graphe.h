@@ -4,6 +4,7 @@
 #include<stdio.h>
 #include "Struct_Liste.h"
 #include "Struct_File.h"
+#include "Tas2Clefs.h"
 
 typedef struct{
   int u,v;        /* Numeros des sommets extremité */
@@ -74,10 +75,17 @@ void chaines_commodies(Graphe *G, ListeEntier *L);
 void ecrit_chaines_commodites(Graphe *G, char *filename);
 
 /* calcule le nombre maximal de chaines qui passe par la meme arete */
-void evaluation_gamma(Graphe *G);
+int evaluation_gamma(Graphe *G);
 
 /* calcule la longueur totale des chemins obtenus en distance euclidienne des aretes */
 double longueur_totale_chemins(Graphe *G, int r);
+
+/* met a jour la bordure */
+void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);
+
+/* retourne pour chaque sommet de G son plus court chemin a partir de r */
+int* plus_courts_chemins(Graphe *G, int r, int u);
+
 
 void lecture_graphe(Graphe *G, FILE * f);
 

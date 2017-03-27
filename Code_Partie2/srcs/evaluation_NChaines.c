@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include "evaluation_NChaines.h"
 
 double max(double a,double b){
   if (a>b) return a;
@@ -18,18 +19,18 @@ double evaluation_NChaines(int gamma, double longueur,char* nom){
   double longueurMin=0;
   double longueurMax=1;
 
-  if (strcmp(nom,"07397_pla")==0) { 
+  if (strcmp(nom,"Instances/07397_pla")==0) { 
     gammaMin = 947-100; 
     gammaMax = 1350;
     longueurMin = 1852207421.05;
     longueurMax=  3309558964.59;
   }
-  else if (strcmp(nom,"00783_rat")==0){
+  else if (strcmp(nom,"Instances/00783_rat")==0){
     gammaMin = 35-10;
     gammaMax = 65;
     longueurMin = 90521.40;
     longueurMax= 179149.60;  
-  } else if (strcmp(nom,"05934_rl")==0){
+  } else if (strcmp(nom,"Instances/05934_rl")==0){
     gammaMin = 	182-30;
     gammaMax = 400;
     longueurMin = 20846876.42;
@@ -37,9 +38,6 @@ double evaluation_NChaines(int gamma, double longueur,char* nom){
   } else return -1000000;
   return eval(gammaMin,gammaMax,longueurMin,longueurMax,gamma,longueur);
 }
-
-
-
 
 
 
