@@ -41,6 +41,10 @@ int main(int argc,char**argv){
 	
 	longueur = longueur_totale_chemins(&G, 5);
 	printf("longueur totale: %f\n", longueur);
+
+	evaluation_gamma(&G);
+	printf("Gamma: %d\n", G.gamma);
+
 	fclose(f);
 
   afficheGrapheSVG(&G,filename);
