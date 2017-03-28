@@ -81,7 +81,7 @@ void ecrit_chaines_commodites(Graphe *G, char *filename);
 int evaluation_gamma(Graphe *G);
 
 /* calcule la longueur totale des chemins obtenus en distance euclidienne des aretes */
-double longueur_totale_chemins(Graphe *G, int r);
+double evaluation_longueur(Graphe *G);
 
 /* met a jour la bordure */
 void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);

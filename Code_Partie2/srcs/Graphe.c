@@ -244,65 +244,46 @@ int evaluation_gamma(Graphe *G)
 		}
 	}
 
-	G->gamma = gamma;
+	//G->gamma = gamma;
 	return gamma;
 }
 
-double longueur_totale_chemins(Graphe *G, int r)
+double evaluation_longueur(Graphe *G)
 {
-	Cellule_arete *coura; /* arete courante */
-	int u, v; /* extremite de l'arete */
-	int *visit = (int*)malloc(((G -> nbsom) + 1) * sizeof(int)); /* tableau de visites */
-	int ar_visit[G->nbsom+1][G->nbsom+1];
-	int i, j;
+	ListeEntier *tabchaines = (ListeEntier*)malloc((G->nbcommod)*sizeof(ListeEntier));
+	int i;
+	int u, v;
 	double longueur_totale;
-	S_file F;
-	
-	Init_file(&F);
-	coura = NULL;
-	u= 0;
-	v = 0;
+	ListeEntier cour;
+	Arete *arete_cour;
+
 	longueur_totale = 0;
-
-	/* initialisation des visites a -1 */
-	for (i = 1; i <= G->nbsom; i++){
-		visit[i] = 0;
-		for (j = 1; j <= G->nbsom; j++){
-			ar_visit[i][j] = 0; /* 0 pour non visite */
-		}
-	}	
+	chaines_commodites(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
 	
-	enfile(&F, r);
-	visit[r] = 1;
+	/* on parcourt chaque chemin pour chaque commodite */
+	for (i=0; i < G->nbcommod; i++){
+		cour = tabchaines[i];
 
-	/* tant que la file n'est pas vide et que v n'a pas ete trouve */
-	while (!(estFileVide(&F))){ 
-		u = defile(&F); /* le sommet a visiter */
-		coura = G -> T_som[u] -> L_voisin; /* arete incidente a u */
+		/* parcours du chemin */
+		while (cour->suiv != NULL){
+			/* les extremites de l'arete pour chaque arete du chemin */
+			u = cour->u;
+			v = cour->suiv->u;
 
-		/* parcours des aretes */
-		while (coura != NULL){ 
-			v = coura -> a -> v; /* extremite de l'arete */
-			/* si l'extremite de l'arete est la meme */
-			if (v == u){
-				v = coura -> a -> u; /* on prend l'autre extremite */
+			/* on recupere l'arete correspondante */
+			arete_cour = acces_arete(G, u, v);
+
+			if (arete_cour){
+				longueur_totale += arete_cour->longueur;
 			}
-			if (ar_visit[u][v] == 0 && ar_visit[v][u] == 0){ /* arete non visitee */
-				longueur_totale += coura -> a -> longueur;
-				ar_visit[u][v] = 1;
-				
-				if (visit[v] == 0){
-					visit[v] = 1;
-					enfile(&F, v); /* on doit visiter v*/
-				}
-			}
-			coura = coura -> suiv;
+			
+			cour = cour->suiv;
 		}
-
 	}
-	
+
 	return longueur_totale;
 }
+
 
 void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s){
 	int i;

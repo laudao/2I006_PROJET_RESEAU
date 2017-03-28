@@ -41,7 +41,7 @@ int main(int argc,char**argv){
 	printf("Nombre d'aretes reliant 5 a 11: %d\n", nbAr);
 	ecrit_chaines_commodites(&G, filenamencha);
 	
-	longueur = longueur_totale_chemins(&G, 5);
+	longueur = evaluation_longueur(&G, 5);
 	printf("longueur totale: %f\n", longueur);
 
 	evaluation_gamma(&G);
