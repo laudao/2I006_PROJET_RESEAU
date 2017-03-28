@@ -105,7 +105,7 @@ int nbAretesMin_depuis_u(Graphe *G, int u, int v)
 	}
 }
 
-ListeEntier chemin_u_v(Graphe *G, int u, int v)
+int* chemin_u_v(Graphe *G, int u, int v)
 {
 	Cellule_arete *coura; /* arete courante */
 	int e1, e2; /* extremite de l'arete */
@@ -113,8 +113,6 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 	int i;
 	int *pere = (int*)malloc(((G -> nbsom) + 1) * sizeof(int)); /* tableau qui indique qui est le pere de qui dans arbo */
 	S_file F;
-	ListeEntier L; /* la liste des sommets liant u a v */
-	Init_Liste(&L);
 	
 	Init_file(&F);
 	coura = NULL;
@@ -153,30 +151,34 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 		}
 	}
 	
-	if (e2 != v){ /* v n'est pas dans le graphe */
-		free(visit);
-		free(pere);
-		return NULL;
-	}
-	else{
-		ajoute_en_tete(&L, v);
-		while (v != u){ /* on remonte l'arborescence jusqu'a u */
-			ajoute_en_tete(&L, pere[v]); /* on ajoute le pere de chaque sommet dans la liste */
-			v = pere[v];
-		}
-		
-		return L;
-	}
+	free(visit);
+	return pere;
+}
+
+ListeEntier liste_chemin_u_v(int u, int v, int *pere)
+{
+
+	ListeEntier L; /* la liste des sommets liant u a v */
+	Init_Liste(&L);
 	
+	ajoute_en_tete(&L, v);
+	while (v != u){ /* on remonte l'arborescence jusqu'a u */
+		ajoute_en_tete(&L, pere[v]); /* on ajoute le pere de chaque sommet dans la liste */
+		v = pere[v];
+	}
+
+	return L;
 }
 
 void chaines_commodites(Graphe *G, ListeEntier* L ){
 	int i;
-	
+	int *pred;
+
 	/* pour chaque commodite du graphe */
 	for(i=0; i < G->nbcommod; i++){
 		/* on stocke dans L[i] le chemin reliant une extremite a l'autre */
-		L[i] = chemin_u_v(G,G->T_commod[i].e1, G->T_commod[i].e2);
+		pred = chemin_u_v(G, G->T_commod[i].e1, G->T_commod[i].e2);
+		L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
 	}
 }
 		 
