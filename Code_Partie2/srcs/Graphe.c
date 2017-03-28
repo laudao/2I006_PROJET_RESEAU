@@ -105,7 +105,7 @@ int nbAretesMin_depuis_u(Graphe *G, int u, int v)
 	}
 }
 
-ListeEntier chemin_u_v(Graphe *G, int u, int v)
+int* chemin_u_v(Graphe *G, int u, int v)
 {
 	Cellule_arete *coura; /* arete courante */
 	int e1, e2; /* extremite de l'arete */
@@ -113,8 +113,6 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 	int i;
 	int *pere = (int*)malloc(((G -> nbsom) + 1) * sizeof(int)); /* tableau qui indique qui est le pere de qui dans arbo */
 	S_file F;
-	ListeEntier L; /* la liste des sommets liant u a v */
-	Init_Liste(&L);
 	
 	Init_file(&F);
 	coura = NULL;
@@ -153,30 +151,34 @@ ListeEntier chemin_u_v(Graphe *G, int u, int v)
 		}
 	}
 	
-	if (e2 != v){ /* v n'est pas dans le graphe */
-		free(visit);
-		free(pere);
-		return NULL;
-	}
-	else{
-		ajoute_en_tete(&L, v);
-		while (v != u){ /* on remonte l'arborescence jusqu'a u */
-			ajoute_en_tete(&L, pere[v]); /* on ajoute le pere de chaque sommet dans la liste */
-			v = pere[v];
-		}
-		
-		return L;
-	}
+	free(visit);
+	return pere;
+}
+
+ListeEntier liste_chemin_u_v(int u, int v, int *pere)
+{
+
+	ListeEntier L; /* la liste des sommets liant u a v */
+	Init_Liste(&L);
 	
+	ajoute_en_tete(&L, v);
+	while (v != u){ /* on remonte l'arborescence jusqu'a u */
+		ajoute_en_tete(&L, pere[v]); /* on ajoute le pere de chaque sommet dans la liste */
+		v = pere[v];
+	}
+
+	return L;
 }
 
 void chaines_commodites(Graphe *G, ListeEntier* L ){
 	int i;
-	
+	int *pred;
+
 	/* pour chaque commodite du graphe */
 	for(i=0; i < G->nbcommod; i++){
 		/* on stocke dans L[i] le chemin reliant une extremite a l'autre */
-		L[i] = chemin_u_v(G,G->T_commod[i].e1, G->T_commod[i].e2);
+		pred = chemin_u_v(G, G->T_commod[i].e1, G->T_commod[i].e2);
+		L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
 	}
 }
 		 
@@ -242,65 +244,46 @@ int evaluation_gamma(Graphe *G)
 		}
 	}
 
-	G->gamma = gamma;
+	//G->gamma = gamma;
 	return gamma;
 }
 
-double longueur_totale_chemins(Graphe *G, int r)
+double evaluation_longueur(Graphe *G)
 {
-	Cellule_arete *coura; /* arete courante */
-	int u, v; /* extremite de l'arete */
-	int *visit = (int*)malloc(((G -> nbsom) + 1) * sizeof(int)); /* tableau de visites */
-	int ar_visit[G->nbsom+1][G->nbsom+1];
-	int i, j;
+	ListeEntier *tabchaines = (ListeEntier*)malloc((G->nbcommod)*sizeof(ListeEntier));
+	int i;
+	int u, v;
 	double longueur_totale;
-	S_file F;
-	
-	Init_file(&F);
-	coura = NULL;
-	u= 0;
-	v = 0;
+	ListeEntier cour;
+	Arete *arete_cour;
+
 	longueur_totale = 0;
-
-	/* initialisation des visites a -1 */
-	for (i = 1; i <= G->nbsom; i++){
-		visit[i] = 0;
-		for (j = 1; j <= G->nbsom; j++){
-			ar_visit[i][j] = 0; /* 0 pour non visite */
-		}
-	}	
+	chaines_commodites(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
 	
-	enfile(&F, r);
-	visit[r] = 1;
+	/* on parcourt chaque chemin pour chaque commodite */
+	for (i=0; i < G->nbcommod; i++){
+		cour = tabchaines[i];
 
-	/* tant que la file n'est pas vide et que v n'a pas ete trouve */
-	while (!(estFileVide(&F))){ 
-		u = defile(&F); /* le sommet a visiter */
-		coura = G -> T_som[u] -> L_voisin; /* arete incidente a u */
+		/* parcours du chemin */
+		while (cour->suiv != NULL){
+			/* les extremites de l'arete pour chaque arete du chemin */
+			u = cour->u;
+			v = cour->suiv->u;
 
-		/* parcours des aretes */
-		while (coura != NULL){ 
-			v = coura -> a -> v; /* extremite de l'arete */
-			/* si l'extremite de l'arete est la meme */
-			if (v == u){
-				v = coura -> a -> u; /* on prend l'autre extremite */
+			/* on recupere l'arete correspondante */
+			arete_cour = acces_arete(G, u, v);
+
+			if (arete_cour){
+				longueur_totale += arete_cour->longueur;
 			}
-			if (ar_visit[u][v] == 0 && ar_visit[v][u] == 0){ /* arete non visitee */
-				longueur_totale += coura -> a -> longueur;
-				ar_visit[u][v] = 1;
-				
-				if (visit[v] == 0){
-					visit[v] = 1;
-					enfile(&F, v); /* on doit visiter v*/
-				}
-			}
-			coura = coura -> suiv;
+			
+			cour = cour->suiv;
 		}
-
 	}
-	
+
 	return longueur_totale;
 }
+
 
 void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s){
 	int i;
@@ -353,20 +336,7 @@ int *plus_courts_chemins(Graphe *G, int r, int u)
 		}
 	}
 	
-	
-	/* a mettre dans une fonction a part entiere */
-//	for (i=1; i<G->nbsom; i++){
-//		s=i;
-//		ajoute_en_tete(&L[s], s);
-//		while (s != r){ /* on remonte l'arborescence jusqu'a u */
-//			ajoute_en_tete(&L[i], pred[s]); /* on ajoute le pere de chaque sommet dans la liste */
-//			s = pred[s];
-//		}
-		
-//	}
-	
 	free(lambda);
-
 	free(marque);
 	return pred;
 }

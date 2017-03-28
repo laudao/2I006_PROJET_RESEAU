@@ -65,8 +65,11 @@ Arete* acces_arete(Graphe* G, int u, int v);
 /* retourne le plus petit nombre d'aretes d'un chemin entre deux sommets u et v */
 int nbAretesMin_depuis_u(Graphe *G, int u, int v);
 
-/* retourne une liste d'entiers correspondant au plus court chemin reliant u a v */
-ListeEntier chemin_u_v(Graphe *G, int u, int v);
+/* retourne le plus court chemin reliant u a v */
+int* chemin_u_v(Graphe *G, int u, int v);
+
+/* renvoie une liste d'entiers correspondant au plus courant chemin de u a v a partir d'un tableau de predecesseurs */
+ListeEntier liste_chemin_u_v(int u, int v, int *pere);
 
 /* retourne les chaines reliant les extremites de chaque commodite du graphe */
 void chaines_commodies(Graphe *G, ListeEntier *L);
@@ -78,14 +81,13 @@ void ecrit_chaines_commodites(Graphe *G, char *filename);
 int evaluation_gamma(Graphe *G);
 
 /* calcule la longueur totale des chemins obtenus en distance euclidienne des aretes */
-double longueur_totale_chemins(Graphe *G, int r);
+double evaluation_longueur(Graphe *G);
 
 /* met a jour la bordure */
 void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);
 
-/* retourne pour chaque sommet de G son plus court chemin a partir de r */
+/* retourne le plus court chemin en terme de distance euclidienne de r a u */
 int* plus_courts_chemins(Graphe *G, int r, int u);
-
 
 void lecture_graphe(Graphe *G, FILE * f);
 
