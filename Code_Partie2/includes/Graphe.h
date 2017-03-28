@@ -86,9 +86,8 @@ double longueur_totale_chemins(Graphe *G, int r);
 /* met a jour la bordure */
 void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);
 
-/* retourne pour chaque sommet de G son plus court chemin a partir de r */
+/* retourne le plus court chemin en terme de distance euclidienne de r a u */
 int* plus_courts_chemins(Graphe *G, int r, int u);
-
 
 void lecture_graphe(Graphe *G, FILE * f);
 

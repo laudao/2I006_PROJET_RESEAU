@@ -355,20 +355,7 @@ int *plus_courts_chemins(Graphe *G, int r, int u)
 		}
 	}
 	
-	
-	/* a mettre dans une fonction a part entiere */
-//	for (i=1; i<G->nbsom; i++){
-//		s=i;
-//		ajoute_en_tete(&L[s], s);
-//		while (s != r){ /* on remonte l'arborescence jusqu'a u */
-//			ajoute_en_tete(&L[i], pred[s]); /* on ajoute le pere de chaque sommet dans la liste */
-//			s = pred[s];
-//		}
-		
-//	}
-	
 	free(lambda);
-
 	free(marque);
 	return pred;
 }
