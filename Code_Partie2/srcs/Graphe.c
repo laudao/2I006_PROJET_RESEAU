@@ -157,7 +157,6 @@ int* chemin_u_v(Graphe *G, int u, int v)
 
 ListeEntier liste_chemin_u_v(int u, int v, int *pere)
 {
-
 	ListeEntier L; /* la liste des sommets liant u a v */
 	Init_Liste(&L);
 	
@@ -181,7 +180,17 @@ void chaines_commodites(Graphe *G, ListeEntier* L ){
 		L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
 	}
 }
-		 
+
+void chaines_commodites_Dijkstra(Graphe *G, ListeEntier *L){
+	int i;
+	int *pred;
+
+	for (i=0; i < G->nbcommod; i++){
+		pred = plus_court_chemins(G, G->T_commod[i].e1, G->T_commod[i].e2);
+		L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
+	}
+}
+
 void ecrit_chaines_commodites(Graphe *G,char* filename){
 	FILE *f = fopen(filename, "w");
 	/* tableau de liste d'entiers pour stocker les chemins */
@@ -218,8 +227,9 @@ int evaluation_gamma(Graphe *G)
 	Arete* arete_cour;
 
 	gamma = 0;
-	chaines_commodites(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
-	
+	//chaines_commodites(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
+	chaines_commodites_Dijkstra(G, tabchaines);
+
 	/* on parcourt chaque chemin pour chaque commodite */
 	for (i=0; i < G->nbcommod; i++){
 		cour = tabchaines[i];
@@ -258,8 +268,8 @@ double evaluation_longueur(Graphe *G)
 	Arete *arete_cour;
 
 	longueur_totale = 0;
-	chaines_commodites(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
-	
+//	chaines_commodites(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
+	chaines_commodites_Dijkstra(G, tabchaines);
 	/* on parcourt chaque chemin pour chaque commodite */
 	for (i=0; i < G->nbcommod; i++){
 		cour = tabchaines[i];
@@ -269,7 +279,6 @@ double evaluation_longueur(Graphe *G)
 			/* les extremites de l'arete pour chaque arete du chemin */
 			u = cour->u;
 			v = cour->suiv->u;
-
 			/* on recupere l'arete correspondante */
 			arete_cour = acces_arete(G, u, v);
 
@@ -305,7 +314,7 @@ void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bord
 	}
 }
 
-int *plus_courts_chemins(Graphe *G, int r, int u)
+int *plus_court_chemins(Graphe *G, int r, int u)
 {
 	Tas2Clefs bordure;
 	/* tableau de liste d'entiers pour stocker le plus court chemin de r aux autres sommets*/
@@ -323,9 +332,11 @@ int *plus_courts_chemins(Graphe *G, int r, int u)
 	for (i=1; i<=G->nbsom; i++){
 		pred[i] = -1;
 		marque[i] = 0;
+		lambda[i] = INT_MAX;
 		Init_Liste(&(L[i]));
 	}
-	
+
+	lambda[r] = 0;
 	insert(&bordure, r, 0);
 	
 	while ((bordure.n != 0) && (s != u)){ /* tant que la bordure n'est pas vide */

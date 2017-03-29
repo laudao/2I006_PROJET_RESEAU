@@ -72,7 +72,9 @@ int* chemin_u_v(Graphe *G, int u, int v);
 ListeEntier liste_chemin_u_v(int u, int v, int *pere);
 
 /* retourne les chaines reliant les extremites de chaque commodite du graphe */
-void chaines_commodies(Graphe *G, ListeEntier *L);
+void chaines_commodites(Graphe *G, ListeEntier *L);
+
+void chaines_commodites_Dijkstra(Graphe *G, ListeEntier *L);
 
 /* ecrit les chaines reliant les extremites de chaque commodite dans un fichier .ncha */
 void ecrit_chaines_commodites(Graphe *G, char *filename);
@@ -87,7 +89,7 @@ double evaluation_longueur(Graphe *G);
 void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);
 
 /* retourne le plus court chemin en terme de distance euclidienne de r a u */
-int* plus_courts_chemins(Graphe *G, int r, int u);
+int* plus_court_chemins(Graphe *G, int r, int u);
 
 void lecture_graphe(Graphe *G, FILE * f);
 
