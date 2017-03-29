@@ -11,9 +11,10 @@ int main(int argc,char**argv){
   int chmeth;
 	Graphe G;
 	FILE *f;
-	int nbAr;
+//	int nbAr;
 	double longueur;
-//	double eval;
+	double eval;
+	int gamma;
 
   if(argc!=3){
     printf("usage: %s <file> <numeromethod>\n",argv[0]);
@@ -36,24 +37,24 @@ int main(int argc,char**argv){
   }
 
   lecture_graphe(&G,f);
-	printf("Nombre de sommet: %d\n", G.nbsom);
-	nbAr = nbAretesMin_depuis_u(&G, 5, 11);
-	printf("Nombre d'aretes reliant 5 a 11: %d\n", nbAr);
+//	printf("Nombre de sommet: %d\n", G.nbsom);
+//	nbAr = nbAretesMin_depuis_u(&G, 5, 11);
+//	printf("Nombre d'aretes reliant 5 a 11: %d\n", nbAr);
 	ecrit_chaines_commodites(&G, filenamencha);
 	
-	longueur = evaluation_longueur(&G, 5);
+	longueur = evaluation_longueur(&G);
 	printf("longueur totale: %f\n", longueur);
 
-	evaluation_gamma(&G);
+	gamma = evaluation_gamma(&G);
 	printf("Gamma: %d\n", G.gamma);
 
-//	eval = evaluation_NChaines(evaluation_gamma(&G), longueur_totale_chemins(&G, 1), filename);
-//	printf("%f\n", eval);
+	eval = evaluation_NChaines(gamma, longueur, filename);
+	printf("%f\n", eval);
 	fclose(f);
 
 	
 
-  afficheGrapheSVG(&G,filename);
+//  afficheGrapheSVG(&G,filename);
 
 
   return 0;
