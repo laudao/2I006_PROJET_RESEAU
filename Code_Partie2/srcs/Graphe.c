@@ -105,7 +105,7 @@ int nbAretesMin_depuis_u(Graphe *G, int u, int v)
 	}
 }
 
-int* chemin_u_v(Graphe *G, int u, int v)
+int* plus_courts_chemins_aretes(Graphe *G, int u, int v)
 {
 	Cellule_arete *coura; /* arete courante */
 	int e1, e2; /* extremite de l'arete */
@@ -169,24 +169,24 @@ ListeEntier liste_chemin_u_v(int u, int v, int *pere)
 	return L;
 }
 
-void chaines_commodites(Graphe *G, ListeEntier* L ){
+void chaines_commodites_1(Graphe *G, ListeEntier* L ){
 	int i;
 	int *pred;
 
 	/* pour chaque commodite du graphe */
 	for(i=0; i < G->nbcommod; i++){
 		/* on stocke dans L[i] le chemin reliant une extremite a l'autre */
-		pred = chemin_u_v(G, G->T_commod[i].e1, G->T_commod[i].e2);
+		pred = plus_courts_chemins_aretes(G, G->T_commod[i].e1, G->T_commod[i].e2);
 		L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
 	}
 }
 
-void chaines_commodites_Dijkstra(Graphe *G, ListeEntier *L){
+void chaines_commodites_2(Graphe *G, ListeEntier *L){
 	int i;
 	int *pred;
 
 	for (i=0; i < G->nbcommod; i++){
-		pred = plus_court_chemins(G, G->T_commod[i].e1, G->T_commod[i].e2);
+		pred = plus_court_chemins_distance(G, G->T_commod[i].e1, G->T_commod[i].e2);
 		L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
 	}
 }
@@ -314,7 +314,7 @@ void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bord
 	}
 }
 
-int *plus_court_chemins(Graphe *G, int r, int u)
+int *plus_court_chemins_distance(Graphe *G, int r, int u)
 {
 	Tas2Clefs bordure;
 	/* tableau de liste d'entiers pour stocker le plus court chemin de r aux autres sommets*/

@@ -66,7 +66,7 @@ Arete* acces_arete(Graphe* G, int u, int v);
 int nbAretesMin_depuis_u(Graphe *G, int u, int v);
 
 /* retourne le plus court chemin reliant u a v */
-int* chemin_u_v(Graphe *G, int u, int v);
+int* plus_courts_chemins_aretes(Graphe *G, int u, int v);
 
 /* renvoie une liste d'entiers correspondant au plus courant chemin de u a v a partir d'un tableau de predecesseurs */
 ListeEntier liste_chemin_u_v(int u, int v, int *pere);
@@ -89,7 +89,7 @@ double evaluation_longueur(Graphe *G);
 void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);
 
 /* retourne le plus court chemin en terme de distance euclidienne de r a u */
-int* plus_court_chemins(Graphe *G, int r, int u);
+int* plus_court_chemins_distance(Graphe *G, int r, int u);
 
 void lecture_graphe(Graphe *G, FILE * f);
 
