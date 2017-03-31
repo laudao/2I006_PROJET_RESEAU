@@ -18,6 +18,7 @@ void ajout_voisin(Graphe* G, int u, int v){
   pa->longueur=sqrt( (G->T_som[u]->x - G->T_som[v]->x)*(G->T_som[u]->x - G->T_som[v]->x) + (G->T_som[u]->y - G->T_som[v]->y)*(G->T_som[u]->y - G->T_som[v]->y));
 	pa -> calc_gamma = 0;
 	/* creation d'une cellule pointant sur cette arete */
+  printf("(%d, %d) : %f\n", u, v, pa->longueur);
   pca=(Cellule_arete*) malloc(sizeof(Cellule_arete));
   pca->a=pa;
   /* ajout de cette cellule dans la liste des voisins de u*/
@@ -202,7 +203,7 @@ void ecrit_chaines_commodites(Graphe *G,char* filename){
 		fprintf(stderr,"Probleme lors de l'ouverture du fichier %s\n", filename);
 	}
 	else{
-		chaines_commodites(G, tabchaines); /* tabchaines va contenir le chemin pour chaque commodite*/
+		chaines_commodites_2(G, tabchaines); /* tabchaines va contenir le chemin pour chaque commodite*/
 		
 		/* on parcourt chaque chemin pour chaque commodite */
 		for(i=0; i < G->nbcommod; i++){
@@ -228,7 +229,7 @@ int evaluation_gamma(Graphe *G)
 
 	gamma = 0;
 	//chaines_commodites(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
-	chaines_commodites_Dijkstra(G, tabchaines);
+	chaines_commodites_2(G, tabchaines);
 
 	/* on parcourt chaque chemin pour chaque commodite */
 	for (i=0; i < G->nbcommod; i++){
@@ -269,7 +270,7 @@ double evaluation_longueur(Graphe *G)
 
 	longueur_totale = 0;
 //	chaines_commodites(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
-	chaines_commodites_Dijkstra(G, tabchaines);
+	chaines_commodites_2(G, tabchaines);
 	/* on parcourt chaque chemin pour chaque commodite */
 	for (i=0; i < G->nbcommod; i++){
 		cour = tabchaines[i];
