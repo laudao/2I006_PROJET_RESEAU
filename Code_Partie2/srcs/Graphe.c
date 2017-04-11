@@ -256,9 +256,9 @@ int evaluation_gamma(Graphe *G)
 	Arete* arete_cour;
 
 	gamma = 0;
-	//chaines_commodites_1(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
+	chaines_commodites_1(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
 	//chaines_commodites_2(G, tabchaines);
-	chaines_commodites_3(G, tabchaines);
+	//chaines_commodites_3(G, tabchaines);
 	initialise_gamma(G);
 	/* on parcourt chaque chemin pour chaque commodite */
 	for (i=0; i < G->nbcommod; i++){
@@ -298,9 +298,9 @@ double evaluation_longueur(Graphe *G)
 	Arete *arete_cour;
 
 	longueur_totale = 0;
-//	chaines_commodites_1(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
+	chaines_commodites_1(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
 //	chaines_commodites_2(G, tabchaines);
-	chaines_commodites_3(G, tabchaines);
+	//chaines_commodites_3(G, tabchaines);
 
 	/* on parcourt chaque chemin pour chaque commodite */
 	for (i=0; i < G->nbcommod; i++){
@@ -388,6 +388,8 @@ void maj(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int
 	int i;
 	float val_compare;
 	Cellule_arete *coura = G->T_som[s]->L_voisin;
+	
+	
 	while (coura != NULL){ /* parcours des voisins */
 		
 		i = coura->a->v;
@@ -401,8 +403,8 @@ void maj(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int
 			lambda[i] = lambda[s] + coura->a->longueur;
 			pred[i] = s;
 			insert(bordure, i, lambda[i]); /* insertion dans la bordure */
-			printf("(%d,%d)\n", coura->a->u, coura->a->v);
-			(coura->a->calc_gamma)++;
+
+			
 
 		}
 
@@ -414,7 +416,7 @@ void maj(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int
 
 int *plus_court_chemin_longeur_gamma(Graphe *G,int r, int u){
 
-
+	printf("debut\n");
 	
 	Tas2Clefs bordure;
 	/* tableau de liste d'entiers pour stocker le plus court chemin de r aux autres sommets*/
@@ -426,6 +428,7 @@ int *plus_court_chemin_longeur_gamma(Graphe *G,int r, int u){
 	int *marque = (int*)malloc(sizeof(int)*(G->nbsom+1)); /* indique si le sommet a ete visite ou non*/
 	int i;
 	int s;
+	Arete *a;
 	
 	init(&bordure, G->nbsom); 
 	
@@ -440,9 +443,17 @@ int *plus_court_chemin_longeur_gamma(Graphe *G,int r, int u){
 	insert(&bordure, r, 0);
 	while ((bordure.n != 0) && (s != u)){ /* tant que la bordure n'est pas vide */
 		s = supprMin(&bordure); /* on enleve l'element de plus courte distance de r */
+		
+		if (s != r){
+			a = acces_arete(G, s, pred[s]);
+			(a->calc_gamma)++;
+		}
+		
+		printf("Sommet : %d\n", s);
 		marque[s] = 1;
 		if (s != u){
 			maj(G, pred, marque, lambda, &bordure, s);
+			
 		}
 	}
 	
