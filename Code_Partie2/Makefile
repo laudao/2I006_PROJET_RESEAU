@@ -1,7 +1,7 @@
 MAINGRAPHE= MainGraphe
 
 CC= gcc
-CFLAGS= -Wextra -Wall -fsanitize=address
+CFLAGS= -Wextra -Wall
 
 SRC_MAIN_GRAPHE= MainGraphe.c
 SRC_SHARED= entree_sortie.c SVGwriter.c Graphe.c Struct_File.c Struct_Liste.c evaluation_NChaines.c Tas2Clefs.c

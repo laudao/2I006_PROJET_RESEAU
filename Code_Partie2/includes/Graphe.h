@@ -66,18 +66,22 @@ Arete* acces_arete(Graphe* G, int u, int v);
 int nbAretesMin_depuis_u(Graphe *G, int u, int v);
 
 /* retourne le plus court chemin reliant u a v */
-int* plus_courts_chemins_aretes(Graphe *G, int u, int v);
+int* plus_court_chemin_aretes(Graphe *G, int u, int v);
 
 /* renvoie une liste d'entiers correspondant au plus courant chemin de u a v a partir d'un tableau de predecesseurs */
 ListeEntier liste_chemin_u_v(int u, int v, int *pere);
 
 /* retourne les chaines reliant les extremites de chaque commodite du graphe */
-void chaines_commodites(Graphe *G, ListeEntier *L);
+void chaines_commodites_1(Graphe *G, ListeEntier *L);
 
-void chaines_commodites_Dijkstra(Graphe *G, ListeEntier *L);
+void chaines_commodites_2(Graphe *G, ListeEntier *L);
+
+void chaines_commodites_3(Graphe *G, ListeEntier *L);
 
 /* ecrit les chaines reliant les extremites de chaque commodite dans un fichier .ncha */
 void ecrit_chaines_commodites(Graphe *G, char *filename);
+
+void initialise_gamma(Graphe *G);
 
 /* calcule le nombre maximal de chaines qui passe par la meme arete */
 int evaluation_gamma(Graphe *G);
@@ -89,7 +93,11 @@ double evaluation_longueur(Graphe *G);
 void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);
 
 /* retourne le plus court chemin en terme de distance euclidienne de r a u */
-int* plus_court_chemins_distance(Graphe *G, int r, int u);
+int* plus_court_chemin_distance(Graphe *G, int r, int u);
+
+void maj(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);
+
+int *plus_court_chemin_longeur_gamma(Graphe *G,int r, int u);
 
 void lecture_graphe(Graphe *G, FILE * f);
 
