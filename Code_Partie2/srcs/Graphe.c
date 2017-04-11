@@ -170,39 +170,36 @@ ListeEntier liste_chemin_u_v(int u, int v, int *pere)
 	return L;
 }
 
-void chaines_commodites_1(Graphe *G, ListeEntier* L ){
+void chaines_commodites(Graphe *G, ListeEntier* L, int chmeth){
 	int i;
-	int *pred;
+	int *pred; /* le tableau des predecesseurs */
 
-	/* pour chaque commodite du graphe */
-	for(i=0; i < G->nbcommod; i++){
-		/* on stocke dans L[i] le chemin reliant une extremite a l'autre */
-		pred = plus_court_chemin_aretes(G, G->T_commod[i].e1, G->T_commod[i].e2);
-		L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
+	switch(chmeth){
+		case 1:
+			/* pour chaque commodite du graphe */
+			for(i=0; i < G->nbcommod; i++){			
+				/* on stocke dans L[i] le chemin reliant une extremite a l'autre */
+				pred = plus_court_chemin_aretes(G, G->T_commod[i].e1, G->T_commod[i].e2);
+				L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
+			}
+			break;
+		case 2:
+			for(i=0; i < G->nbcommod; i++){
+				pred = plus_court_chemin_distance(G, G->T_commod[i].e1, G->T_commod[i].e2);
+				L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
+			}	
+			break;
+		case 3:
+			for (i=0; i < G->nbcommod; i++){
+				pred = plus_court_chemin_longueur_gamma(G, G->T_commod[i].e1, G->T_commod[i].e2);
+				L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
+			}
+			break;
+		default:;
 	}
 }
 
-void chaines_commodites_2(Graphe *G, ListeEntier *L){
-	int i;
-	int *pred;
-
-	for (i=0; i < G->nbcommod; i++){
-		pred = plus_court_chemin_distance(G, G->T_commod[i].e1, G->T_commod[i].e2);
-		L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
-	}
-}
-
-void chaines_commodites_3(Graphe *G, ListeEntier *L){
-	int i;
-	int *pred;
-
-	for (i=0; i < G->nbcommod; i++){
-		pred = plus_court_chemin_longeur_gamma(G, G->T_commod[i].e1, G->T_commod[i].e2);
-		L[i] = liste_chemin_u_v(G->T_commod[i].e1, G->T_commod[i].e2, pred);
-	}
-}
-
-void ecrit_chaines_commodites(Graphe *G,char* filename){
+void ecrit_chaines_commodites(Graphe *G, char* filename, int chmeth){
 	FILE *f = fopen(filename, "w");
 	/* tableau de liste d'entiers pour stocker les chemins */
 	ListeEntier* tabchaines = (ListeEntier*)malloc((G->nbcommod)*sizeof(ListeEntier));
@@ -213,19 +210,21 @@ void ecrit_chaines_commodites(Graphe *G,char* filename){
 		fprintf(stderr,"Probleme lors de l'ouverture du fichier %s\n", filename);
 	}
 	else{
-		chaines_commodites_3(G, tabchaines); /* tabchaines va contenir le chemin pour chaque commodite*/
-		
-		/* on parcourt chaque chemin pour chaque commodite */
-		for(i=0; i < G->nbcommod; i++){
-			cour = tabchaines[i];
-			while(cour != NULL){
-				fprintf(f, "%d ", cour->u);
-				cour = cour->suiv;
+		if ((chmeth > 0) && (chmeth <= 3)){
+			chaines_commodites(G, tabchaines, chmeth); /* tabchaines va contenir le chemin pour chaque commodite*/
+			
+			/* on parcourt chaque chemin pour chaque commodite */
+			for(i=0; i < G->nbcommod; i++){
+				cour = tabchaines[i];
+				while(cour != NULL){
+					fprintf(f, "%d ", cour->u);
+					cour = cour->suiv;
+				}
+				fprintf(f,"-1\n");
 			}
-			fprintf(f,"-1\n");
 		}
+		fclose(f);
 	}
-	fclose(f);
 }
 
 void initialise_gamma(Graphe *G)
@@ -233,21 +232,22 @@ void initialise_gamma(Graphe *G)
   int i;
   Cellule_arete *curr;
 
+	/* pour chaque sommet */
   for (i=1; i<=G->nbsom; i++){
+  	/* pour chaque arete incidente a ce sommet */
   	curr = G->T_som[i]->L_voisin;
   	
   	while (curr){
-  	  curr->a->calc_gamma=0;
+  	  curr->a->calc_gamma=0; /* on met calc_gamma a 0 */
   	  curr=curr->suiv;
   	}
   }
-	printf("coucou\n");
 }
 
 
-int evaluation_gamma(Graphe *G)
+int evaluation_gamma(Graphe *G, int chmeth)
 {
-	
+	/* tableau de listes d'entiers*/
 	ListeEntier *tabchaines = (ListeEntier*)malloc((G->nbcommod)*sizeof(ListeEntier));
 	int i;
 	int u, v;
@@ -256,10 +256,11 @@ int evaluation_gamma(Graphe *G)
 	Arete* arete_cour;
 
 	gamma = 0;
-	chaines_commodites_1(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
-	//chaines_commodites_2(G, tabchaines);
-	//chaines_commodites_3(G, tabchaines);
+
+/* tabchaines contient le chemin pour chaque commodite */
+	chaines_commodites(G, tabchaines, chmeth);
 	initialise_gamma(G);
+
 	/* on parcourt chaque chemin pour chaque commodite */
 	for (i=0; i < G->nbcommod; i++){
 		cour = tabchaines[i];
@@ -272,12 +273,10 @@ int evaluation_gamma(Graphe *G)
 			
 			/* on recupere l'arete correspondante */
 			arete_cour = acces_arete(G, u, v);
-
-			if (arete_cour){
-				(arete_cour->calc_gamma)++;
-				if (arete_cour->calc_gamma > gamma){
+			(arete_cour->calc_gamma)++;
+				
+			if (arete_cour->calc_gamma > gamma){
 					gamma = arete_cour->calc_gamma;
-				}
 			}
 
 			cour = cour->suiv;
@@ -288,7 +287,7 @@ int evaluation_gamma(Graphe *G)
 	return gamma;
 }
 
-double evaluation_longueur(Graphe *G)
+double evaluation_longueur(Graphe *G, int chmeth)
 {
 	ListeEntier *tabchaines = (ListeEntier*)malloc((G->nbcommod)*sizeof(ListeEntier));
 	int i;
@@ -298,9 +297,9 @@ double evaluation_longueur(Graphe *G)
 	Arete *arete_cour;
 
 	longueur_totale = 0;
-	chaines_commodites_1(G, tabchaines); /* tabchaines contient le chemin pour chaque commodite */
-//	chaines_commodites_2(G, tabchaines);
-	//chaines_commodites_3(G, tabchaines);
+
+/* tabchaines contient le chemin pour chaque commodite */
+	chaines_commodites(G, tabchaines, chmeth);
 
 	/* on parcourt chaque chemin pour chaque commodite */
 	for (i=0; i < G->nbcommod; i++){
@@ -314,9 +313,7 @@ double evaluation_longueur(Graphe *G)
 			/* on recupere l'arete correspondante */
 			arete_cour = acces_arete(G, u, v);
 
-			if (arete_cour){
-				longueur_totale += arete_cour->longueur;
-			}
+			longueur_totale += arete_cour->longueur;
 			
 			cour = cour->suiv;
 		}
@@ -384,7 +381,7 @@ int *plus_court_chemin_distance(Graphe *G, int r, int u)
 	return pred;
 }
 
-void maj(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s){
+void maj_bordure_gamma(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s){
 	int i;
 	float val_compare;
 	Cellule_arete *coura = G->T_som[s]->L_voisin;
@@ -400,12 +397,9 @@ void maj(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int
 
 
 		if ((marque[i] == 0) && (lambda[i] > lambda[s] + val_compare)){
-			lambda[i] = lambda[s] + coura->a->longueur;
+			lambda[i] = lambda[s] + val_compare;
 			pred[i] = s;
 			insert(bordure, i, lambda[i]); /* insertion dans la bordure */
-
-			
-
 		}
 
 		coura = coura->suiv;
@@ -414,10 +408,8 @@ void maj(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int
 
 
 
-int *plus_court_chemin_longeur_gamma(Graphe *G,int r, int u){
+int *plus_court_chemin_longueur_gamma(Graphe *G,int r, int u){
 
-	printf("debut\n");
-	
 	Tas2Clefs bordure;
 	/* tableau de liste d'entiers pour stocker le plus court chemin de r aux autres sommets*/
 	ListeEntier *L = (ListeEntier*)malloc((G->nbsom+1)*sizeof(ListeEntier));
@@ -443,17 +435,16 @@ int *plus_court_chemin_longeur_gamma(Graphe *G,int r, int u){
 	insert(&bordure, r, 0);
 	while ((bordure.n != 0) && (s != u)){ /* tant que la bordure n'est pas vide */
 		s = supprMin(&bordure); /* on enleve l'element de plus courte distance de r */
-		
+	
+		/* si le sommet s n'est pas la racine, on incremente le champ calc_gamma de l'arete qui le lie a son predecesseur */
 		if (s != r){
 			a = acces_arete(G, s, pred[s]);
 			(a->calc_gamma)++;
 		}
 		
-		printf("Sommet : %d\n", s);
 		marque[s] = 1;
 		if (s != u){
-			maj(G, pred, marque, lambda, &bordure, s);
-			
+			maj_bordure_gamma(G, pred, marque, lambda, &bordure, s);
 		}
 	}
 	
@@ -534,7 +525,7 @@ void afficheGrapheSVG(Graphe *G, char* nomInstance){
     xu=G->T_som[i]->x;
     yu=G->T_som[i]->y;
     
-    printf("%d %d %f %f\n",i,G->T_som[i]->num,xu,yu);
+//    printf("%d %d %f %f\n",i,G->T_som[i]->num,xu,yu);
     SVGpoint(&svg,500*(xu-minx)/(maxx-minx),500*(yu-miny)/(maxy-miny));
 
     coura=G->T_som[i]->L_voisin;
