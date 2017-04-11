@@ -14,6 +14,9 @@ typedef struct{
  /* Emplacement des donnees utiles aux algorithmes */
 
   int calc_gamma; 
+	int dans_chemin;
+	int dans_parcours;
+	int nb_util;
 
  /**************************************************/
 
@@ -69,7 +72,7 @@ int nbAretesMin_depuis_u(Graphe *G, int u, int v);
 int* plus_court_chemin_aretes(Graphe *G, int u, int v);
 
 /* renvoie une liste d'entiers correspondant au plus courant chemin de u a v a partir d'un tableau de predecesseurs pere */
-ListeEntier liste_chemin_u_v(int u, int v, int *pere);
+ListeEntier liste_chemin_u_v(Graphe *G, int u, int v, int *pere);
 
 /* retourne les chaines reliant les extremites de chaque commodite du graphe 
 	le parcours se fait en fonction du choix chmethod
@@ -83,6 +86,10 @@ void ecrit_chaines_commodites(Graphe *G, char *filename, int chmethod);
 
 /* met a 0 le champ calc_gamma de chaque arete */
 void initialise_gamma(Graphe *G);
+
+void remise_a_zero_dans_chemin(Graphe *G, int *pere, int u, int v);
+
+void remise_a_zero_gamma(Graphe *G);
 
 /* calcule le nombre maximal de chaines qui passe par la meme arete */
 int evaluation_gamma(Graphe *G, int chmethod);
