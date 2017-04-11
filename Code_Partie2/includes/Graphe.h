@@ -65,29 +65,30 @@ Arete* acces_arete(Graphe* G, int u, int v);
 /* retourne le plus petit nombre d'aretes d'un chemin entre deux sommets u et v */
 int nbAretesMin_depuis_u(Graphe *G, int u, int v);
 
-/* retourne le plus court chemin reliant u a v */
+/* retourne le plus court chemin, en terme d'aretes, reliant u a v */
 int* plus_court_chemin_aretes(Graphe *G, int u, int v);
 
-/* renvoie une liste d'entiers correspondant au plus courant chemin de u a v a partir d'un tableau de predecesseurs */
+/* renvoie une liste d'entiers correspondant au plus courant chemin de u a v a partir d'un tableau de predecesseurs pere */
 ListeEntier liste_chemin_u_v(int u, int v, int *pere);
 
-/* retourne les chaines reliant les extremites de chaque commodite du graphe */
-void chaines_commodites_1(Graphe *G, ListeEntier *L);
+/* retourne les chaines reliant les extremites de chaque commodite du graphe 
+	le parcours se fait en fonction du choix chmethod
+*/
+void chaines_commodites(Graphe *G, ListeEntier *L, int chmethod);
 
-void chaines_commodites_2(Graphe *G, ListeEntier *L);
+/* ecrit les chaines reliant les extremites de chaque commodite dans un fichier .ncha
+	le parcours se fait en fonction du choix chmethod
+*/
+void ecrit_chaines_commodites(Graphe *G, char *filename, int chmethod);
 
-void chaines_commodites_3(Graphe *G, ListeEntier *L);
-
-/* ecrit les chaines reliant les extremites de chaque commodite dans un fichier .ncha */
-void ecrit_chaines_commodites(Graphe *G, char *filename);
-
+/* met a 0 le champ calc_gamma de chaque arete */
 void initialise_gamma(Graphe *G);
 
 /* calcule le nombre maximal de chaines qui passe par la meme arete */
-int evaluation_gamma(Graphe *G);
+int evaluation_gamma(Graphe *G, int chmethod);
 
 /* calcule la longueur totale des chemins obtenus en distance euclidienne des aretes */
-double evaluation_longueur(Graphe *G);
+double evaluation_longueur(Graphe *G, int chmethod);
 
 /* met a jour la bordure */
 void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);
@@ -95,16 +96,14 @@ void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bord
 /* retourne le plus court chemin en terme de distance euclidienne de r a u */
 int* plus_court_chemin_distance(Graphe *G, int r, int u);
 
-void maj(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);
+/* met a jour la bordure en prenant en compte calc_gamma */
+void maj_bordure_gamma(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s);
 
-int *plus_court_chemin_longeur_gamma(Graphe *G,int r, int u);
+/* retourne le plus court chemin en terme de distance en prenant en compte le nombre de chemins passant par les aretes */
+int *plus_court_chemin_longueur_gamma(Graphe *G,int r, int u);
 
 void lecture_graphe(Graphe *G, FILE * f);
 
 void afficheGrapheSVG(Graphe *G, char* nomInstance);
-
-
-
-
 
 #endif

@@ -23,6 +23,21 @@ int main(int argc,char**argv){
   }
 
   chmeth=atoi(argv[2]);
+
+	if ((chmeth < 0) || (chmeth > 3)){
+		fprintf(stderr, "usage: 0 < chmeth <= 3\n");
+		return 1;
+	}
+
+  if (chmeth == 1)
+  	printf("1 : Parcours en largeur\n");
+
+	if (chmeth == 2)
+		printf("2 : Plus courts chemins (Algorithme de Dijkstra)\n");
+
+	if (chmeth == 3)
+		printf("3 : Plus courts chemins minimisant la valeur maximale d'utilisation des cables\n");
+
   strcpy(filename,argv[1]);
   strcpy(filenameres,argv[1]);
   strcpy(filenamencha,argv[1]);
@@ -41,12 +56,11 @@ int main(int argc,char**argv){
 //	nbAr = nbAretesMin_depuis_u(&G, 5, 11);
 //	printf("Nombre d'aretes reliant 5 a 11: %d\n", nbAr);
 	
-	ecrit_chaines_commodites(&G, filenamencha);
+	ecrit_chaines_commodites(&G, filenamencha, chmeth);
 	
-	longueur = evaluation_longueur(&G);
+	longueur = evaluation_longueur(&G, chmeth);
 
-
-	gamma = evaluation_gamma(&G);
+	gamma = evaluation_gamma(&G, chmeth);
 
 
 	eval = evaluation_NChaines(gamma, longueur, filename);
