@@ -169,8 +169,8 @@ ListeEntier liste_chemin_u_v(Graphe *G, int u, int v, int *pere)
 	while (v != u){ /* on remonte l'arborescence jusqu'a u */
 		ajoute_en_tete(&L, pere[v]); /* on ajoute le pere de chaque sommet dans la liste */
 		a = acces_arete(G, pere[v], v);
-	//	printf("(%d, %d) est parcourue\n", a->u, a->v);
-		a->dans_chemin = 1;
+		//printf("(%d, %d) est parcourue\n", a->u, a->v);
+		a->dans_chemin = 1; /* l'arete est marquee comme etant utilisee dans ce chemin */
 		v = pere[v];
 	}
 
@@ -201,7 +201,7 @@ void chaines_commodites(Graphe *G, ListeEntier* L, int chmeth){
 			for (i=0; i < G->nbcommod; i++){
 				pred = plus_court_chemin_longueur_gamma(G, G->T_commod[i].e1, G->T_commod[i].e2);
 				L[i] = liste_chemin_u_v(G, G->T_commod[i].e1, G->T_commod[i].e2, pred);
-				remise_a_zero_gamma(G);
+				remise_a_zero_post_parcours(G);
 				remise_a_zero_dans_chemin(G, pred, G->T_commod[i].e1, G->T_commod[i].e2);
 			}
 			break;
@@ -232,12 +232,12 @@ void remise_a_zero_dans_chemin(Graphe *G, int *pere, int u, int v)
 	
 	while (v != u){ /* on remonte l'arborescence jusqu'a u */
 		a = acces_arete(G, pere[v], v);
-		a->dans_chemin = 0;
+		a->dans_chemin = 0; /* reinitialisation */
 		v = pere[v];
 	}
 }
 
-void remise_a_zero_gamma(Graphe *G)
+void remise_a_zero_post_parcours(Graphe *G)
 {
 	int i;
 	Cellule_arete *curr;
@@ -246,10 +246,13 @@ void remise_a_zero_gamma(Graphe *G)
 		curr = G->T_som[i]->L_voisin;
 
 		while (curr){
+			/* si l'arete n'est pas dans le chemin mais a ete consideree durant le parcours */
 			if ((curr->a->dans_chemin == 0) && (curr->a->dans_parcours == 1)){
+				/* on reinitialise calc_gamma a sa valeur pre-parcours*/
 				curr->a->calc_gamma = curr->a->calc_gamma - curr->a->nb_util;
-			//	printf("(%d, %d) parcourue mais pas utilisee : %d\n", curr->a->u, curr->a->v, curr->a->calc_gamma);
+		//		printf("(%d, %d) parcourue mais pas utilisee : %d\n", curr->a->u, curr->a->v, curr->a->calc_gamma);
 			}
+			/* pour toutes les aretes (donc aussi celles utilisees dans le chemin) */
 			curr->a->dans_parcours=0;
 			curr->a->nb_util=0;
 			curr = curr->suiv;
@@ -433,10 +436,18 @@ void maj_bordure_gamma(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs
 		
 		i = coura->a->v;
 		if (i == s) i = coura->a->u;
-		
-		/* si le sommet n'a pas ete visite et qu'on a trouve un chemin plus interessant pour y acceder */
-		val_compare = coura->a->longueur+ coura->a->calc_gamma;
 
+		/* si la longueur > gamma, privilegier gamma, et inversement */
+		if (coura->a->longueur > coura->a->calc_gamma){
+			val_compare = 0.01*coura->a->longueur + coura->a->calc_gamma;
+		}
+
+		if (coura->a->longueur < coura->a->calc_gamma){
+			val_compare = coura->a->longueur + 0.01*coura->a->calc_gamma;
+		}
+
+
+		/* si le sommet n'a pas ete visite et qu'on a trouve un chemin plus interessant pour y acceder */
 
 		if ((marque[i] == 0) && (lambda[i] > lambda[s] + val_compare)){
 			lambda[i] = lambda[s] + val_compare;
@@ -484,7 +495,7 @@ int *plus_court_chemin_longueur_gamma(Graphe *G,int r, int u){
 			(a->calc_gamma)++;
 			(a->nb_util)++;
 			a->dans_parcours=1;
-		//	printf("(%d, %d) calc_gamma: %d\n", a->u, a->v,a->calc_gamma);
+			printf("(%d, %d) calc_gamma: %d\n", a->u, a->v,a->calc_gamma);
 		}
 		
 		marque[s] = 1;
