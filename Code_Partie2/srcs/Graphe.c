@@ -19,6 +19,7 @@ void ajout_voisin(Graphe* G, int u, int v){
 	pa -> calc_gamma = 0;
 	pa -> dans_chemin = 0;
 	pa -> dans_parcours = 0;
+	pa -> nb_util = 0;
 	/* creation d'une cellule pointant sur cette arete */
   
   pca=(Cellule_arete*) malloc(sizeof(Cellule_arete));
