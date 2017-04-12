@@ -2,27 +2,33 @@
 On reprend l'algo de D sauf que on commance par appeler la fonction d'evaluation gamma , une fois cette fonction appelée on aura une valeure de calc_gamma pour chaque arrete.
 Ensuite dans la fonction maj_bordure lors de la comparaison avec la valeur de longueur on ajoute aussi la valeure de calc_gamma ce qui permet a notre algo de choisire à chaque fois l'arrete avec ( calc_gamma,longueur ) minimisé.*/
 
+//alors je voulais pas changer directement grph.c et c'est pourquoi je l'ai changé là
 
 void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bordure, int s){
 	int i;
 	int val_compare;
 	Cellule_arete *coura = G->T_som[s]->L_voisin;
-	while (coura != NULL){ /* parcours des voisins */
+	
+	val_compare = coura->a->longueur+coura->a->calc_gamma;
 		
-		i = coura->a->v;
-		if (i == s) i = coura->a->u;
-		
-		/* si le sommet n'a pas ete visite et qu'on a trouve un chemin plus interessant pour y acceder */
-		val_compare = coura->a->longueur+ calc_gamma;
-		
-		if ((marque[i] == 0) && (lambda[i] > lambda[s] + val_compare)){
-			lambda[i] = lambda[s] + val_compare;
-			pred[i] = s;
-			insert(bordure, i, lambda[i]); /* insertion dans la bordure */
+		// si la longueur > gamma priviligier gamma ete l'inverse
+		if (coura->a->longueur > coura->a->calc_gamma){
+		val_compare = 0.01*coura->a->longueur + coura->a->calc_gamma;
 		}
 		
+		if (coura->a->longueur  < coura->a->calc_gamma){
+		val_compare = coura->a->longueur + 0.01*coura->a->calc_gamma;
+		}
+		
+		
+		if ((marque[i] == 0) && (lambda[i] > lambda[s] + val_compare)){
+
+			lambda[i] = lambda[s] + val_compare;
+			pred[i] = s;
+			insert(bordure, i, lambda[i]);
+			}
+
 		coura = coura->suiv;
-	}
 }
 
 
