@@ -391,8 +391,6 @@ void maj_bordure(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs *bord
 int *plus_court_chemin_distance(Graphe *G, int r, int u)
 {
 	Tas2Clefs bordure;
-	/* tableau de liste d'entiers pour stocker le plus court chemin de r aux autres sommets*/
-	ListeEntier *L = (ListeEntier*)malloc((G->nbsom+1)*sizeof(ListeEntier));
 	/* tableau des valeurs des plus courts chemins de racine r*/
 	int *lambda = (int*)malloc(sizeof(int)*(G->nbsom+1)); 
 	/* tableau des predecesseurs dans l'arborescence des plus courts chemins de racine r*/
@@ -407,7 +405,6 @@ int *plus_court_chemin_distance(Graphe *G, int r, int u)
 		pred[i] = -1;
 		marque[i] = 0;
 		lambda[i] = INT_MAX;
-		Init_Liste(&(L[i]));
 	}
 
 	lambda[r] = 0;
@@ -495,7 +492,7 @@ int *plus_court_chemin_longueur_gamma(Graphe *G,int r, int u){
 			(a->calc_gamma)++;
 			(a->nb_util)++;
 			a->dans_parcours=1;
-			printf("(%d, %d) calc_gamma: %d\n", a->u, a->v,a->calc_gamma);
+			//printf("(%d, %d) calc_gamma: %d\n", a->u, a->v,a->calc_gamma);
 		}
 		
 		marque[s] = 1;
@@ -605,7 +602,3 @@ void afficheGrapheSVG(Graphe *G, char* nomInstance){
   SVGfinalize(&svg);
 
 }
-
-
-
-

@@ -8,11 +8,12 @@ typedef struct{
 
 typedef struct{
 	int n;
+	int max;
 	Element **H;
 	int *A;
 } Tas2Clefs;
 
-void init(Tas2Clefs *t, int n);
+void init(Tas2Clefs *t, int max);
 
 int racine();
 

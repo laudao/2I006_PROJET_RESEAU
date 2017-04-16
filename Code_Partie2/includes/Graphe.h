@@ -73,7 +73,7 @@ int nbAretesMin_depuis_u(Graphe *G, int u, int v);
 /* retourne le plus court chemin, en terme d'aretes, reliant u a v */
 int* plus_court_chemin_aretes(Graphe *G, int u, int v);
 
-/* renvoie une liste d'entiers correspondant au plus courant chemin de u a v a partir d'un tableau de predecesseurs pere 
+/* renvoie une liste d'entiers correspondant au plus court chemin de u a v a partir d'un tableau de predecesseurs pere 
 	met aussi le champ dans_chemin des aretes utilisees a 1 */
 ListeEntier liste_chemin_u_v(Graphe *G, int u, int v, int *pere);
 
