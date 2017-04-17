@@ -115,7 +115,8 @@ int supprMin(Tas2Clefs *t){
 	}
 	int min = t->H[racine()]->i;
 	swap(t, racine(), t->n);
-	t->A[t->H[t->n]->i] = -1;
+//	t->A[t->H[t->n]->i] = -1;
+	t->A[min] = -1;
 	t->n--;
 	descendre(t, racine());
 	return min;

@@ -463,7 +463,7 @@ int *plus_court_chemin_longueur_gamma(Graphe *G,int r, int u){
 	Tas2Clefs bordure;
 	/* tableau de liste d'entiers pour stocker le plus court chemin de r aux autres sommets*/
 	ListeEntier *L = (ListeEntier*)malloc((G->nbsom+1)*sizeof(ListeEntier));
-	/* tableau des valeurs des plus courts chemins de racine r*/
+	/* tableau des valeurs des meilleurs chemins de racine r */
 	int *lambda = (int*)malloc(sizeof(int)*(G->nbsom+1)); 
 	/* tableau des predecesseurs dans l'arborescence des plus courts chemins de racine r*/
 	int *pred = (int*)malloc(sizeof(int)*(G->nbsom+1));
