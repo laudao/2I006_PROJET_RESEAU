@@ -2,14 +2,15 @@
 #include "Tas2Clefs.h"
 #include <stdio.h>
 
-void init(Tas2Clefs *t, int n){
+void init(Tas2Clefs *t, int max){
 	t->n = 0;
-	t->H = (Element**)malloc(sizeof(Element*)*(n+1));
-	t->A = (int*)malloc(sizeof(int)*(n+1));
+	t->max = max;
+	t->H = (Element**)malloc(sizeof(Element*)*(max+1));
+	t->A = (int*)malloc(sizeof(int)*(max+1));
 	int i;
-	for (i=1; i<=n; i++){
+	for (i=1; i<=max; i++){
 		t->H[i] = NULL;
-		t->A[i] = -1;
+		t->A[i] = i;
 	}
 }
 
@@ -55,12 +56,9 @@ int isFeuille(Tas2Clefs *t, int i){
 }
 
 void swap(Tas2Clefs *t, int i, int j){
-	int itmp = t->H[i]->i;
-	double ctmp = t->H[i]->c;
-	t->H[i]->c = t->H[j]->c;
-	t->H[j]->c = ctmp;
-	t->H[i]->i = t->H[j]->i;
-	t->H[j]->i = itmp;
+	Element *tmp = t->H[i];
+	t->H[i] = t->H[j];
+	t->H[j] = tmp;
 	t->A[t->H[i]->i] = i;
 	t->A[t->H[j]->i] = j;
 }
@@ -111,16 +109,17 @@ void insert(Tas2Clefs *t, int i, double c){
 }
 
 int supprMin(Tas2Clefs *t){
-		if (t->n == 0){
-			printf("Le tas est vide\n");
-			return -1;
-		}
-		int min = t->H[racine()]->i;
-		swap(t, racine(), t->n);
-		t->A[t->H[t->n]->i] = -1;
-		t->n--;
-		descendre(t, racine());
-		return min;
+	if (t->n == 0){
+		printf("Le tas est vide\n");
+		return -1;
+	}
+	int min = t->H[racine()]->i;
+	swap(t, racine(), t->n);
+//	t->A[t->H[t->n]->i] = -1;
+	t->A[min] = -1;
+	t->n--;
+	descendre(t, racine());
+	return min;
 }
 
 int estDansTas(Tas2Clefs *t, int i){
