@@ -119,4 +119,6 @@ void lecture_graphe(Graphe *G, FILE * f);
 
 void afficheGrapheSVG(Graphe *G, char* nomInstance);
 
+void libere_graphe(Graphe *G);
+
 #endif

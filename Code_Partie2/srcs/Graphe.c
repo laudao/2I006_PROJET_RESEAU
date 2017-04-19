@@ -551,6 +551,32 @@ void lecture_graphe(Graphe *G, FILE * f){
 
 }
 
+void libere_graphe(Graphe *G)
+{
+  int i;
+  Cellule_arete *curr;
+  Cellule_arete *tmp;
+
+  free(G->T_commod);
+  
+	/* pour chaque sommet */
+  for (i=1; i<=G->nbsom; i++){
+  	/* pour chaque arete incidente a ce sommet */
+  	curr = G->T_som[i]->L_voisin;
+  	
+  	while (curr){
+  	  tmp = curr;
+  	  curr=tmp->suiv;
+  	  free(tmp->a);
+  	  free(tmp);
+  	}
+  	free(G->T_som[i]);
+  }
+  
+  free(G->T_som);
+}
+
+
 
 void afficheGrapheSVG(Graphe *G, char* nomInstance){
 

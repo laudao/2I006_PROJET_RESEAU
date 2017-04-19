@@ -72,7 +72,7 @@ int main(int argc,char**argv){
 	
 
   afficheGrapheSVG(&G,filename);
-
+  libere_graphe(&G);
 
   return 0;
 }
