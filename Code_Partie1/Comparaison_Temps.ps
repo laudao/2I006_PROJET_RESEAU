@@ -1,7 +1,7 @@
 %!PS-Adobe-2.0
 %%Title: Comparaison_Temps.ps
-%%Creator: gnuplot 4.4 patchlevel 0
-%%CreationDate: Sat Mar 18 11:09:28 2017
+%%Creator: gnuplot 4.6 patchlevel 6
+%%CreationDate: Wed Apr 19 14:44:16 2017
 %%DocumentFonts: (atend)
 %%BoundingBox: 50 50 402 554
 %%Orientation: Portrait
@@ -22,10 +22,12 @@ gnudict begin
 /Level1 false def
 /Rounded false def
 /ClipToBoundingBox false def
+/SuppressPDFMark false def
 /TransparentPatterns false def
 /gnulinewidth 5.000 def
 /userlinewidth gnulinewidth def
 /Gamma 1.0 def
+/BackgroundColor {-1.000 -1.000 -1.000} def
 %
 /vshift -46 def
 /dl1 {
@@ -40,22 +42,6 @@ gnudict begin
 /vpt_ 31.5 def
 /hpt hpt_ def
 /vpt vpt_ def
-Level1 {} {
-/SDict 10 dict def
-systemdict /pdfmark known not {
-  userdict /pdfmark systemdict /cleartomark get put
-} if
-SDict begin [
-  /Title (Comparaison_Temps.ps)
-  /Subject (gnuplot plot)
-  /Creator (gnuplot 4.4 patchlevel 0)
-  /Author (3535002)
-%  /Producer (gnuplot)
-%  /Keywords ()
-  /CreationDate (Sat Mar 18 11:09:28 2017)
-  /DOCINFO pdfmark
-end
-} ifelse
 /doclip {
   ClipToBoundingBox {
     newpath 50 50 moveto 402 50 lineto 402 554 lineto 50 554 lineto closepath
@@ -63,7 +49,7 @@ end
   } if
 } def
 %
-% Gnuplot Prolog Version 4.4 (January 2010)
+% Gnuplot Prolog Version 4.6 (September 2012)
 %
 %/SuppressPDFMark true def
 %
@@ -75,6 +61,7 @@ end
 /Z {closepath} bind def
 /C {setrgbcolor} bind def
 /f {rlineto fill} bind def
+/g {setgray} bind def
 /Gshow {show} def   % May be redefined later in the file to support UTF-8
 /vpt2 vpt 2 mul def
 /hpt2 hpt 2 mul def
@@ -96,6 +83,7 @@ end
 	dup 1 lt {pop 1} if 10 mul /udl exch def} def
 /PL {stroke userlinewidth setlinewidth
 	Rounded {1 setlinejoin 1 setlinecap} if} def
+3.8 setmiterlimit
 % Default Line colors
 /LCw {1 1 1} def
 /LCb {0 0 0} def
@@ -328,7 +316,8 @@ end
 /PatternFill {gsave /PFa [ 9 2 roll ] def
   PFa 0 get PFa 2 get 2 div add PFa 1 get PFa 3 get 2 div add translate
   PFa 2 get -2 div PFa 3 get -2 div PFa 2 get PFa 3 get Rec
-  gsave 1 setgray fill grestore clip
+  TransparentPatterns {} {gsave 1 setgray fill grestore} ifelse
+  clip
   currentlinewidth 0.5 mul setlinewidth
   /PFs PFa 2 get dup mul PFa 3 get dup mul add sqrt def
   0 0 M PFa 5 get rotate PFs -2 div dup translate
@@ -433,6 +422,23 @@ Level1 {Level1PatternFill} {Level2PatternFill} ifelse
 /Symbol-Oblique /Symbol findfont [1 0 .167 1 0 0] makefont
 dup length dict begin {1 index /FID eq {pop pop} {def} ifelse} forall
 currentdict end definefont pop
+Level1 SuppressPDFMark or 
+{} {
+/SDict 10 dict def
+systemdict /pdfmark known not {
+  userdict /pdfmark systemdict /cleartomark get put
+} if
+SDict begin [
+  /Title (Comparaison_Temps.ps)
+  /Subject (gnuplot plot)
+  /Creator (gnuplot 4.6 patchlevel 6)
+  /Author (3522144)
+%  /Producer (gnuplot)
+%  /Keywords ()
+  /CreationDate (Wed Apr 19 14:44:16 2017)
+  /DOCINFO pdfmark
+end
+} ifelse
 end
 %%EndProlog
 %%Page: 1 1
@@ -444,170 +450,187 @@ doclip
 0 setgray
 newpath
 (Helvetica) findfont 140 scalefont setfont
+BackgroundColor 0 lt 3 1 roll 0 lt exch 0 lt or or not {gsave BackgroundColor C clippath fill grestore} if
 /Helvetica findfont 140 scalefont setfont
-/Helvetica findfont 140 scalefont setfont
+/vshift -46 def
 /Helvetica findfont 140 scalefont setfont
 1.000 UL
 LTb
-630 280 M
-63 0 V
-2624 0 R
--63 0 V
 546 280 M
+63 0 V
+2666 0 R
+-63 0 V
+462 280 M
 ( 0) Rshow
 1.000 UL
 LTb
-630 960 M
+546 790 M
 63 0 V
-2624 0 R
+2666 0 R
 -63 0 V
-546 960 M
-( 20) Rshow
+462 790 M
+( 0.2) Rshow
 1.000 UL
 LTb
-630 1640 M
+546 1300 M
 63 0 V
-2624 0 R
+2666 0 R
 -63 0 V
--2708 0 R
-( 40) Rshow
+-2750 0 R
+( 0.4) Rshow
 1.000 UL
 LTb
-630 2320 M
+546 1810 M
 63 0 V
-2624 0 R
+2666 0 R
 -63 0 V
--2708 0 R
-( 60) Rshow
+-2750 0 R
+( 0.6) Rshow
 1.000 UL
 LTb
-630 2999 M
+546 2320 M
 63 0 V
-2624 0 R
+2666 0 R
 -63 0 V
--2708 0 R
-( 80) Rshow
+-2750 0 R
+( 0.8) Rshow
 1.000 UL
 LTb
-630 3679 M
+546 2831 M
 63 0 V
-2624 0 R
+2666 0 R
 -63 0 V
--2708 0 R
-( 100) Rshow
+-2750 0 R
+( 1) Rshow
 1.000 UL
 LTb
-630 4359 M
+546 3341 M
 63 0 V
-2624 0 R
+2666 0 R
 -63 0 V
--2708 0 R
-( 120) Rshow
+-2750 0 R
+( 1.2) Rshow
 1.000 UL
 LTb
-630 5039 M
+546 3851 M
 63 0 V
-2624 0 R
+2666 0 R
 -63 0 V
--2708 0 R
-( 140) Rshow
+-2750 0 R
+( 1.4) Rshow
 1.000 UL
 LTb
-630 280 M
+546 4361 M
+63 0 V
+2666 0 R
+-63 0 V
+-2750 0 R
+( 1.6) Rshow
+1.000 UL
+LTb
+546 4871 M
+63 0 V
+2666 0 R
+-63 0 V
+-2750 0 R
+( 1.8) Rshow
+1.000 UL
+LTb
+546 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-630 140 M
+546 140 M
 ( 0) Cshow
 1.000 UL
 LTb
-899 280 M
+819 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-899 140 M
+819 140 M
 ( 1000) Cshow
 1.000 UL
 LTb
-1167 280 M
+1092 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-0 -4836 R
+0 -4668 R
 ( 2000) Cshow
 1.000 UL
 LTb
-1436 280 M
+1365 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-0 -4836 R
+0 -4668 R
 ( 3000) Cshow
 1.000 UL
 LTb
-1705 280 M
+1638 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-0 -4836 R
+0 -4668 R
 ( 4000) Cshow
 1.000 UL
 LTb
-1974 280 M
+1910 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-0 -4836 R
+0 -4668 R
 ( 5000) Cshow
 1.000 UL
 LTb
-2242 280 M
+2183 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-0 -4836 R
+0 -4668 R
 ( 6000) Cshow
 1.000 UL
 LTb
-2511 280 M
+2456 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-0 -4836 R
+0 -4668 R
 ( 7000) Cshow
 1.000 UL
 LTb
-2780 280 M
+2729 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-0 -4836 R
+0 -4668 R
 ( 8000) Cshow
 1.000 UL
 LTb
-3048 280 M
+3002 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-0 -4836 R
+0 -4668 R
 ( 9000) Cshow
 1.000 UL
 LTb
-3317 280 M
+3275 280 M
 0 63 V
-0 4696 R
+0 4528 R
 0 -63 V
-0 -4836 R
+0 -4668 R
 ( 10000) Cshow
 1.000 UL
 LTb
 1.000 UL
 LTb
-630 5039 N
-630 280 L
-2687 0 V
-0 4759 V
--2687 0 V
+546 4871 N
+546 280 L
+2729 0 V
+0 4591 V
+-2729 0 V
 Z stroke
 1.000 UP
 1.000 UL
@@ -617,113 +640,78 @@ LTb
 LT0
 /Helvetica findfont 140 scalefont setfont
 LCb setrgbcolor
-2666 4906 M
-("Temps_liste" using 1:2) Rshow
+2624 4738 M
+("Temps_hachage" using 1:2) Rshow
 LT0
-2750 4906 M
+2708 4738 M
 399 0 V
-633 280 M
+549 280 M
 8 0 V
-1 0 V
+1 1 V
 6 0 V
--1 0 V
-8 0 V
+-1 -1 V
+8 1 V
 9 0 V
 3 0 V
-25 0 V
-31 0 V
-30 1 V
-13 0 V
-58 2 V
-141 8 V
-224 28 V
-358 74 V
-121 145 V
-172 71 V
-272 144 V
-224 709 V
-21 -128 V
-222 401 V
-273 1512 V
-270 1217 V
+26 1 V
+32 1 V
+30 2 V
+13 2 V
+59 8 V
+143 11 V
+228 36 V
+363 87 V
+123 182 V
+175 122 V
+276 181 V
+227 1017 V
+22 -383 V
+226 349 V
+277 1156 V
+274 1596 V
 % End plot #1
 % Begin plot #2
 stroke
 LT1
 /Helvetica findfont 140 scalefont setfont
 LCb setrgbcolor
-2666 4766 M
-("Temps_hachage" using 1:2) Rshow
-LT1
-2750 4766 M
-399 0 V
-633 280 M
-8 0 V
-1 0 V
-6 0 V
--1 0 V
-8 0 V
-9 0 V
-3 0 V
-25 0 V
-31 0 V
-30 0 V
-13 0 V
-58 0 V
-141 0 V
-224 1 V
-358 1 V
-121 2 V
-172 2 V
-272 2 V
-224 14 V
-21 -5 V
-222 5 V
-273 15 V
-270 21 V
-% End plot #2
-% Begin plot #3
-stroke
-LT2
-/Helvetica findfont 140 scalefont setfont
-LCb setrgbcolor
-2666 4626 M
+2624 4598 M
 ("Temps_arbre" using 1:2) Rshow
-LT2
-2750 4626 M
+LT1
+2708 4598 M
 399 0 V
-633 280 M
-8 0 V
+549 281 M
+8 1 V
 1 0 V
 6 0 V
--1 0 V
-8 0 V
-9 0 V
+-1 1 V
+8 1 V
+9 -1 V
 3 0 V
-25 0 V
-31 0 V
-30 0 V
+26 3 V
+32 4 V
+30 2 V
 13 0 V
-58 0 V
-141 1 V
-224 0 V
-358 1 V
-121 1 V
-172 2 V
-272 0 V
-224 6 V
-21 -3 V
-222 2 V
-273 6 V
-270 3 V
-% End plot #3
+59 9 V
+143 23 V
+228 53 V
+363 43 V
+123 114 V
+175 149 V
+276 -60 V
+227 479 V
+22 -257 V
+226 199 V
+277 426 V
+274 234 V
+% End plot #2
 stroke
 LTb
-630 5039 N
-630 280 L
-2687 0 V
-0 4759 V
--2687 0 V
+546 4871 N
+546 280 L
+2729 0 V
+0 4591 V
+-2729 0 V
 Z stroke
 1.000 UP
 1.000 UL

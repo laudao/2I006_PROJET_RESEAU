@@ -1,5 +1,4 @@
-plot "Temps_liste" using 1:2 with lines
-replot "Temps_hachage" using 1:2 with lines
+plot "Temps_hachage" using 1:2 with lines
 replot "Temps_arbre" using 1:2 with lines
 set term postscript portrait
 set output "Comparaison_Temps.ps"
