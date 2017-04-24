@@ -439,6 +439,7 @@ void maj_bordure_gamma(Graphe *G, int *pred, int *marque, int *lambda, Tas2Clefs
 		if (i == s) i = coura->a->u;
 
 		/* si la longueur > gamma, privilegier gamma, et inversement */
+	
 		if (coura->a->longueur > coura->a->calc_gamma){
 			val_compare = 0.01*coura->a->longueur + coura->a->calc_gamma;
 		}
@@ -521,7 +522,7 @@ void lecture_graphe(Graphe *G, FILE * f){
   GetChaine(f,100,temp);
   G->nbcommod=GetEntier(f);
   GetChaine(f,100,temp);
-  G->gamma=GetEntier(f);
+  G->gamma_fichier=GetEntier(f);
 
   G->T_som=(Sommet**) malloc((G->nbsom+1)*sizeof(Sommet*));
   for (i=1;i<=G->nbsom;i++){
