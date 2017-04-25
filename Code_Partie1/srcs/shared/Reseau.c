@@ -116,6 +116,41 @@ Reseau* initialiseReseau(Chaines *C)
 	return nouv;
 }
 
+void libere_noeud(Noeud *n)
+{
+	free(n);
+}
+
+void libere_liste_cell_noeud(CellNoeud *liste)
+{
+	CellNoeud *tmp;
+	
+	while (liste){
+		tmp = liste;
+		liste = liste->suiv;
+		libere_noeud(tmp->nd);
+		free(tmp);
+	}
+}
+
+void libere_liste_cell_commodite(CellCommodite *liste){
+
+	CellCommodite *tmp;
+	
+	while (liste){
+		tmp = liste;
+		liste = liste->suiv;
+		free(tmp);
+	}
+}
+
+void libere_reseau(Reseau *r)
+{
+	libere_liste_cell_noeud(r->noeuds);
+	libere_liste_cell_commodite(r->commodites);
+	free(r);
+}
+
 Reseau *reconstitueReseauListe(Chaines *C)
 {
 	CellChaine *chaine; /* chaine courante */

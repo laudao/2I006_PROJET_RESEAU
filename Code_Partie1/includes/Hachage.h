@@ -27,4 +27,8 @@ Noeud *rechercheCreeNoeudHachage(Reseau *R, tableHachage* H, double x, double y)
 /* reconstruit le reseau R a partir de la liste des chaines C en utilisant la table de hachage H */
 Reseau *reconstitueReseauHachage(Chaines *C);
 
+void libere_cell_noeud_hachage(CellNoeud *liste);
+
+void libere_table_hachage(tableHachage* H);
+
 #endif

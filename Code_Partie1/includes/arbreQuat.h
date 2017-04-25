@@ -39,4 +39,6 @@ Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat*
 /* reconstruit le reseau R a partir de la liste des chaines C et en utilisant l'arbre quaternaire*/
 Reseau* recreeReseauArbre(Chaines* C);
 
+void libere_arbre(ArbreQuat *a);
+
 #endif

@@ -57,6 +57,7 @@ int main()
 		fclose(fread);
 	}
 
+	libere_reseau(R);
 	fclose(f_temps_liste);
 	fclose(f_temps_hachage);
 	fclose(f_temps_arbre);
