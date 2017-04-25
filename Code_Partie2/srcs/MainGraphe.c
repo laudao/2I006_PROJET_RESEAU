@@ -70,9 +70,8 @@ int main(int argc,char**argv){
 	fclose(f);
 
 	
-
   afficheGrapheSVG(&G,filename);
-  libere_graphe(&G);
+	libere_graphe(&G);
 
   return 0;
 }
