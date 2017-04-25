@@ -102,6 +102,16 @@ ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent)
 	}
 }
 
+void libere_arbre(ArbreQuat *a){
+	if (a != NULL){
+		libere_arbre(a->so);
+		libere_arbre(a->se);
+		libere_arbre(a->no);
+		libere_arbre(a->ne);
+		free(a);
+	}
+}
+
 Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat* parent)
 {
 	Noeud *n = NULL;
@@ -217,5 +227,6 @@ Reseau* recreeReseauArbre(Chaines* C)
 		chaine = chaine -> suiv;
 	}
 
+	libere_arbre(parent);
 	return R;
 }

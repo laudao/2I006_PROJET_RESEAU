@@ -65,6 +65,29 @@ Noeud* rechercheCreeNoeudHachage(Reseau *R, tableHachage* H, double x, double y)
 	return noeud;
 }
 
+void libere_cell_noeud_hachage(CellNoeud *liste)
+{
+	CellNoeud *tmp;
+	
+	while (liste){
+		tmp = liste;
+		liste = liste->suiv;
+		free(tmp);
+	}
+}
+
+void libere_table_hachage(tableHachage* H)
+{
+	int i;
+	
+	for (i=0; i<H->m; i++){
+		libere_cell_noeud_hachage(H->tab[i]);
+	}
+	
+	free(H->tab);
+	free(H);
+}
+
 Reseau *reconstitueReseauHachage(Chaines *C)
 {
 	CellChaine *chaine; /* chaine courante */
@@ -121,6 +144,7 @@ Reseau *reconstitueReseauHachage(Chaines *C)
 		chaine = chaine -> suiv;
 	}
 
+	libere_table_hachage(H);
 	return R;
 }
 

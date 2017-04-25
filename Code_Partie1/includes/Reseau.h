@@ -61,6 +61,18 @@ void ajoutCellNoeudVoisin(Noeud *noeud, Noeud *voisin);
 /* Initialise un Reseau avec une chaines */
 Reseau* initialiseReseau(Chaines *C);
 
+/* Libere un noeud */
+void libere_noeud(Noeud *n);
+
+/* Libere la liste de noeuds */
+void libere_liste_cell_noeud(CellNoeud *liste);
+
+/* Libere la liste de commodites */
+void libere_liste_cell_commodite(CellCommodite *liste);
+
+/* Libere le réseau */
+void libere_reseau(Reseau *r);
+
 /* reconstruit le reseau R a partir de la liste des chaines C
 	 et en utilisant pour structure directement la liste chainee noeud */
 Reseau* reconstitueReseauListe(Chaines *C);
