@@ -368,7 +368,7 @@ void afficheReseauSVG(Reseau *R, char *nomInstance)
 		voisin = noeudCurr -> voisins;
 
 		while (voisin){
-			if (voisin -> nd -> num >= noeudCurr -> num){
+			if (voisin -> nd -> num < noeudCurr -> num){
 				xnormalisesuiv = (voisin -> nd -> x - xmin)*(500)/(xmax-xmin);
 				ynormalisesuiv = (voisin -> nd -> y - ymin)*(500)/(ymax-ymin); 
 				SVGline(svg, xnormalise, ynormalise, xnormalisesuiv, ynormalisesuiv);
