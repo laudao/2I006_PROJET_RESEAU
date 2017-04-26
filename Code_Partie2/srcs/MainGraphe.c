@@ -11,14 +11,15 @@ int main(int argc,char**argv){
   int chmeth;
 	Graphe G;
 	FILE *f;
-	//int nbAr;
 	double longueur;
 	double eval;
 	int gamma;
 
   if(argc!=3){
-    printf("usage: %s <file> <numeromethod>\n",argv[0]);
-    printf("where numeromethode = 1 if using Width firs search\n");
+    printf("usage: %s <fichier> <numeromethode>\n",argv[0]);
+    printf("1: parcours en largeur\n");
+    printf("2: algorithme de Dijkstra\n");
+    printf("3: algorithme personnalise\n");
     return 1;
   }
 
@@ -52,24 +53,17 @@ int main(int argc,char**argv){
   }
 
   lecture_graphe(&G,f);
-//	printf("Nombre de sommet: %d\n", G.nbsom);
-//	nbAr = nbAretesMin_depuis_u(&G, 5, 11);
-//	printf("Nombre d'aretes reliant 5 a 11: %d\n", nbAr);
-	
 	ecrit_chaines_commodites(&G, filenamencha, chmeth);
-	
 	longueur = evaluation_longueur(&G, chmeth);
-
 	gamma = evaluation_gamma(&G, chmeth);
-
-
 	eval = evaluation_NChaines(gamma, longueur, filename);
-	printf("longueur totale: %f\n", longueur);
-	printf("Gamma: %d\n", gamma);
-	printf("Evaluation: %f\n", eval);
+	
+	printf("Instance = %s\n", filename);
+	printf("Evaluation =  %f\n", eval);
+	printf("Gamma = %d\n", gamma);
+	printf("Distance = %f\n", longueur);
 	fclose(f);
 
-	
   afficheGrapheSVG(&G,filename);
 	libere_graphe(&G);
 
