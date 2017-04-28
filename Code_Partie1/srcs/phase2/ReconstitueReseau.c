@@ -104,7 +104,8 @@ int main(int argc, char **argv)
 		}
 	}while (choice != 0);
 
-	libere_reseau(R);
+	if (R)
+		libere_reseau(R);
 	if (fwrite)
 		fclose(fwrite);
 	if (fread)
