@@ -35,7 +35,7 @@ clean:
 	rm $(OBJ_MAIN_GRAPHE) $(OBJ_SHARED)
 
 fclean: clean
-	rm $(MAIN_GRAPHE)
+	rm $(MAINGRAPHE)
 
 re: fclean all
 

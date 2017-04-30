@@ -22,6 +22,7 @@ int main()
 	"Instances_cha/01400_fl.cha","Instances_cha/02392_pr.cha","Instances_cha/03795_fl.cha", "Instances_cha/04461_fnl.cha","Instances_cha/05000_USA-road-d-NY.cha","Instances_cha/05934_rl.cha",
 	"Instances_cha/07000_USA-road-d-NY.cha","Instances_cha/07397_pla.cha","Instances_cha/08000_USA-road-d-NY.cha","Instances_cha/09000_USA-road-d-NY.cha","Instances_cha/10000_USA-road-d-NY.cha"};
 
+	R = NULL;
 	f_temps_liste = fopen("Temps_liste", "w");
 	f_temps_hachage = fopen("Temps_hachage", "w");
 	f_temps_arbre = fopen("Temps_arbre", "w");
@@ -57,7 +58,9 @@ int main()
 		fclose(fread);
 	}
 
-	libere_reseau(R);
+	if (R)
+		libere_reseau(R);
+
 	fclose(f_temps_liste);
 	fclose(f_temps_hachage);
 	fclose(f_temps_arbre);
