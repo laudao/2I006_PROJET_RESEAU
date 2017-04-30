@@ -1,5 +1,0 @@
-plot "Temps_arbre" using 1:2 with lines
-set term postscript portrait
-set output "Temps_arbre_res.ps"
-set size 0.7, 0.7
-replot
