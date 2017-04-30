@@ -118,14 +118,6 @@ Reseau* initialiseReseau(Chaines *C)
 
 void libere_noeud(Noeud *n)
 {
-	CellNoeud *tmp;
-
-	while (n->voisins){
-		tmp = n->voisins;
-		n->voisins = n->voisins->suiv;
-		free(tmp);
-	}
-
 	free(n);
 }
 
