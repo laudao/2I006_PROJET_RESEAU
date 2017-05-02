@@ -548,7 +548,8 @@ void lecture_graphe(Graphe *G, FILE * f){
   GetChaine(f,100,temp);
   G->nbcommod=GetEntier(f);
   GetChaine(f,100,temp);
-  G->gamma=GetEntier(f);
+  G->gamma_fichier=GetEntier(f);
+  G->gamma=0;
 
   G->T_som=(Sommet**) malloc((G->nbsom+1)*sizeof(Sommet*));
   for (i=1;i<=G->nbsom;i++){

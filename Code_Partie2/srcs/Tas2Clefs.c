@@ -10,7 +10,7 @@ void init(Tas2Clefs *t, int max){
 	int i;
 	for (i=1; i<=max; i++){
 		t->H[i] = NULL;
-		t->A[i] = i;
+		t->A[i] = -1;
 	}
 }
 
@@ -98,14 +98,16 @@ Element *min(Tas2Clefs *t){
 }
 
 void insert(Tas2Clefs *t, int i, double c){
-	Element *nouveau = (Element*)malloc(sizeof(Element));
-	nouveau->c = c;
-	nouveau->i = i;
+	if (!(estDansTas(t, i))){
+		Element *nouveau = (Element*)malloc(sizeof(Element));
+		nouveau->c = c;
+		nouveau->i = i;
 	
-	t->n++;
-	t->H[t->n] = nouveau;
-	t->A[i] = t->n;
-	monter(t, t->n);
+		t->n++;
+		t->H[t->n] = nouveau;
+		t->A[i] = t->n;
+		monter(t, t->n);
+	}
 }
 
 int supprMin(Tas2Clefs *t){
@@ -115,7 +117,6 @@ int supprMin(Tas2Clefs *t){
 	}
 	int min = t->H[racine()]->i;
 	swap(t, racine(), t->n);
-//	t->A[t->H[t->n]->i] = -1;
 	t->A[min] = -1;
 	t->n--;
 	descendre(t, racine());
@@ -127,7 +128,7 @@ int estDansTas(Tas2Clefs *t, int i){
 }
 
 void supprElem(Tas2Clefs *t, int i){
-	if (t->n < i){
+	if (!(estDansTas(t, i))){
 		printf("L'element cherche n'est pas dans le tas\n");
 		return ;
 	}
